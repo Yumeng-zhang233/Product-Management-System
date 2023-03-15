@@ -1,0 +1,52 @@
+#myTable {
+  position: absolute;
+  top: 0;
+  border-right: solid;
+  border-bottom: solid;
+  border-collapse: collapse;
+}
+.myHeader {
+  border-top: solid;
+  border-left: solid;
+  font-size: 16px;
+  text-align: center;
+  background-color: rgb(166, 191, 216);
+}
+.myAge,
+.myName,
+.myPhone {
+  font-size: 14px;
+  border-top: solid;
+  border-left: solid;
+  width: 100px;
+  text-align: center;
+}
+.myAddress {
+  border-top: solid;
+  border-left: solid;
+  width: 400px;
+  text-align: center;
+}
+form {
+  position: absolute;
+  top: 260px;
+}
+.label {
+  padding-top: 80px;
+}
+input {
+  margin-bottom: 10px;
+}
+#button {
+  margin-top: 1cm;
+}
+#order_list,
+#unorder_list {
+  margin-left: 70%;
+}
+#selector {
+  margin-left: 70%;
+}
+#mySelect {
+  margin-left: 5px;
+}

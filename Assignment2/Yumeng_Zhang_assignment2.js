@@ -12,7 +12,7 @@ const itemsObject = [
 //1.1
 function doubleValue(input) {
   const newArr = [];
-  input.forEach((e) => {
+  input.map((e) => {
     newArr.push({ quantity: e.quantity * 2, price: e.price * 2 });
   });
   console.log("1.1: ");
@@ -24,7 +24,7 @@ doubleValue(arr);
 //1.2
 function filterValue(input) {
   const newArr = [];
-  input.forEach((e) => {
+  input.map((e) => {
     if (e.quantity > 2 && e.price > 300) {
       newArr.push({ quantity: e.quantity, price: e.price });
     }
@@ -81,6 +81,7 @@ const second = [
   { uuid: 1, role: "manager" },
   { uuid: 2, role: "associate" },
 ];
+
 function mergeArray(arr1, arr2) {
   //Deduped array of uuid
   const ids = [
@@ -106,8 +107,29 @@ function mergeArray(arr1, arr2) {
     res.push(cur);
   });
   res.sort((a, b) => a.uuid - b.uuid);
+
   console.log("3: ");
   console.log(res);
 }
-
-mergeArray(first, second);
+const mergeTwoArray = (first, second) => {
+  const map = {};
+  [...first, ...second].forEach(({ uuid, role, name }) => {
+    if (!map[uuid]) {
+      map[uuid] = {
+        uuid,
+        ...{ role: role ? role : null },
+        ...{ name: name ? name : null },
+      };
+    } else {
+      map[uuid] = {
+        ...map[uuid],
+        //conditional add properties to object
+        ...(role && { role: role ? role : null }),
+        ...(name && { name: name ? name : null }),
+      };
+    }
+  });
+  return Object.values(map);
+};
+console.log(mergeTwoArray(first, second));
+//mergeArray(first, second);
