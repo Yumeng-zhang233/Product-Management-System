@@ -1,0 +1,179 @@
+.App {
+  height: 100%;
+  background: #fffbee;
+  display: flex;
+  flex-direction: column;
+}
+/* Header/logo Title */
+.header {
+  height: 60px;
+  background: black;
+}
+.body {
+  height: calc(100% - 120px);
+}
+
+.signin_icon:hover {
+  color: white;
+}
+.signin_icon {
+  position: absolute;
+  width: 80px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bolder;
+  color: black;
+  height: 40px;
+  left: 85%;
+  top: 10px;
+  background: #2bc6ff;
+  border-radius: 24px;
+  cursor: pointer;
+}
+.signup_button {
+  color: aliceblue;
+  padding-left: 3px;
+}
+.signin_button {
+  color: aliceblue;
+  padding-left: 3px;
+}
+.signup_note {
+  margin-left: -8px;
+}
+/* Popup style */
+.popup {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+.box {
+  opacity: 80%;
+  background: black;
+  padding-right: 30px;
+  padding-left: 30px;
+  border-radius: 20px;
+  box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
+}
+.login-text {
+  color: white;
+  font-weight: bolder;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+form {
+  padding-bottom: 15%;
+}
+.login-box {
+  border: 1px solid lightgrey;
+  width: 95%;
+  margin: 5px;
+  font-size: 11pt;
+  outline: none;
+}
+.login-btn {
+  width: 100%;
+  background-color: rgb(48, 172, 251);
+  color: white;
+  margin-top: 5px;
+  border-radius: 20px;
+  border: none;
+  font-size: 15pt;
+  font-weight: 700;
+  transition: 1s;
+  outline: none;
+  cursor: pointer;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.account_note {
+  font-size: small;
+  color: beige;
+}
+.signup_note {
+  padding-left: 20%;
+  font-size: small;
+  color: beige;
+}
+.close-icon {
+  font-size: 20px;
+  color: #fffbee;
+  border-color: black;
+  margin-left: 90%;
+  background-color: black;
+}
+label {
+  color: white;
+  width: 100%;
+  text-align: center;
+}
+/* Footer */
+.footer {
+  position: fixed;
+  left: 0;
+  height: 60px;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  text-align: center;
+}
+.modal-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: large;
+  margin-bottom: 16px;
+}
+.header_label {
+  color: aliceblue;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  left: 5%;
+  top: 10px;
+  border-radius: 24px;
+  cursor: pointer;
+  font-weight: bolder;
+  font-style: initial;
+  padding: 5px;
+  font-weight: 600;
+}
+@media screen and (max-width: 390px) {
+  body {
+    background-color: lightblue;
+  }
+  .signin_icon {
+    position: absolute;
+    width: 80px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bolder;
+    color: black;
+    height: 40px;
+    left: 75%;
+    top: 10px;
+    background: #2bc6ff;
+    border-radius: 24px;
+    cursor: pointer;
+  }
+  .search_input {
+    position: absolute;
+    left: -47.5%;
+    padding-top: 50px;
+  }
+  .header {
+    height: 110px;
+    background: black;
+  }
+  .modal {
+    padding-right: 25px;
+  }
+}
