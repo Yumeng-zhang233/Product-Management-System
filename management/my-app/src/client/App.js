@@ -9,7 +9,7 @@ function App() {
   const [isShowSignin, setIsShowSignin] = useState(false);
   const [isShowSignup, setIsShowSignup] = useState(false);
   const [isupdatePassword, setUpdatePassword] = useState(false);
-  const [isLoggedin, setIsLoggedin] = useState(false);
+  const [isCreatedProduct, setIsCreatedProduct] = useState(false);
 
   return (
     <div className="App">
@@ -18,7 +18,7 @@ function App() {
           signin: { isShowSignin, setIsShowSignin },
           signup: { isShowSignup, setIsShowSignup },
           update: { isupdatePassword, setUpdatePassword },
-          login: { isLoggedin, setIsLoggedin },
+          createProduct: { isCreatedProduct, setIsCreatedProduct },
         }}
       >
         <Header />
