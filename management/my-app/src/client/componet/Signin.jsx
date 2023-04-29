@@ -10,7 +10,8 @@ import UpdatePassword from "./UpdatePassword";
 
 function Signin() {
   const { signin, signup, update } = React.useContext(SigninContext);
-  const { userEmail, userPassword } = React.useContext(UserInfoContext);
+  const { userEmail, userPassword, userInfo } =
+    React.useContext(UserInfoContext);
 
   const { isShowSignin, setIsShowSignin } = signin;
   const { isShowSignup, setIsShowSignup } = signup;
@@ -18,6 +19,7 @@ function Signin() {
 
   const { email, setEmail } = userEmail;
   const { password, setPassword } = userPassword;
+  const { user, setUser } = userInfo;
 
   const handleChange = (e) => {
     e.preventDefault();

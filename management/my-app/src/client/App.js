@@ -2,15 +2,44 @@ import "./App.css";
 import Footer from "./Footer";
 import Header from "./Header";
 import Body from "./Body";
+import { useDispatch } from "react-redux";
+import { initProducts } from "./actions";
 import { SigninContext } from "./SigninContext.js";
-import React, { useState } from "react";
+import { UserInfoContext } from "./UserInfoContext";
+import { store } from "./store/index";
+
+import React, { useState, useEffect } from "react";
 
 function App() {
+  const dispatch = useDispatch();
+
   const [isShowSignin, setIsShowSignin] = useState(false);
   const [isShowSignup, setIsShowSignup] = useState(false);
   const [isupdatePassword, setUpdatePassword] = useState(false);
   const [isCreatedProduct, setIsCreatedProduct] = useState(false);
+  const [isProductDetail, setIsProductDetail] = useState(false);
+  const [isEditProduct, setIsEditProduct] = useState(false);
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user");
+
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser);
+      setUser(foundUser);
+      setEmail(foundUser.email);
+      setPassword(foundUser.password);
+
+      store.dispatch({
+        type: "Login",
+      });
+    }
+  }, []);
+  useEffect(() => {
+    dispatch(initProducts());
+  }, [dispatch]);
   return (
     <div className="App">
       <SigninContext.Provider
@@ -19,11 +48,21 @@ function App() {
           signup: { isShowSignup, setIsShowSignup },
           update: { isupdatePassword, setUpdatePassword },
           createProduct: { isCreatedProduct, setIsCreatedProduct },
+          productDetail: { isProductDetail, setIsProductDetail },
+          editProduct: { isEditProduct, setIsEditProduct },
         }}
       >
-        <Header />
-        <Body />
-        <Footer />
+        <UserInfoContext.Provider
+          value={{
+            userEmail: { email, setEmail },
+            userPassword: { password, setPassword },
+            userInfo: { user, setUser },
+          }}
+        >
+          <Header />
+          <Body />
+          <Footer />
+        </UserInfoContext.Provider>
       </SigninContext.Provider>
     </div>
   );

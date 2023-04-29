@@ -1,5 +1,90 @@
 import { ajaxConfigHelper } from "../helper/index";
 
+export const initProducts = () => async (dispatch) => {
+  try {
+    //const todos = await todoApi.getAllTodos();
+    const productsResponse = await fetch("/allProducts");
+    const products = await productsResponse.json();
+    dispatch({
+      type: "Init",
+      payload: products,
+    });
+  } catch (error) {
+    //will add error handling code later
+    console.log(error);
+  }
+};
+export const addProduct = (content) => (dispatch) => {
+  fetch("/addProduct", ajaxConfigHelper(content))
+    .then((response) => response.json())
+    .then(
+      ({
+        newProduct: {
+          productName,
+          description,
+          category,
+          price,
+          quantity,
+          image,
+          id,
+        },
+      }) => {
+        dispatch({
+          type: "AddProduct",
+          payload: {
+            productName,
+            description,
+            category,
+            price,
+            quantity,
+            image,
+            id,
+          },
+        });
+      }
+    )
+    .catch((e) => {
+      console.log(e);
+    });
+};
+export const editProductInfo = (product) => async (dispatch) => {
+  try {
+    //const data = await todoApi.modTodo(index);
+    const response = await fetch(
+      "/editProduct",
+      ajaxConfigHelper(product, "PUT")
+    );
+    const result = await response.json();
+    console.log(result);
+
+    dispatch({
+      type: "EditProduct",
+      payload: product,
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// export const editProduct = (product) => async (dispatch) => {
+//   try {
+//     //const data = await todoApi.modTodo(index);
+//     const response = await fetch(
+//       "/editProduct",
+//       ajaxConfigHelper({ product }, "PUT")
+//     );
+//     const result = await response.json();
+//     console.log(result);
+
+//     dispatch({
+//       type: "EditProduct",
+//       payload: product,
+//     });
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
+
 export const addUser =
   ({ email, password }) =>
   (dispatch) => {
@@ -47,54 +132,3 @@ export const logout = () => async (dispatch) => {
     console.log(error);
   }
 };
-
-// export const addUser = ({ email, password }) => {
-//   fetch("/addUser", ajaxConfigHelper({ email, password }))
-//     .then((response) => {
-//       if(response.ok){
-
-//       }
-//       return response.json();
-//     })
-//     .catch((e) => {
-//       console.error(e);
-//     });
-// };
-//   const data = {
-//     email: email,
-//     password: password,
-//   };
-//   const url = "/allUsers";
-//   const newUserRes = await fetch(url, {
-//     credentials: "include",
-//     method: "GET",
-//   });
-//   let res = await newUserRes.json();
-//   console.log(res);
-
-// export const addUser = async ({ email, password }) => {
-//   // const { userEmail, userPassword } = React.useContext(UserInfoContext);
-//   // const { email, setEmail } = userEmail;
-//   // const { password, setPassword } = userPassword;
-//   console.log("777");
-
-//   console.log(email);
-//   const data = {
-//     email: email,
-//     password: password,
-//   };
-//   const url = "/addUser";
-//   const newUserRes = await fetch(url, {
-//     credentials: "include",
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify(data),
-//   });
-//   //   fetch("/addUser", ajaxConfigHelper({ email, password }))
-//   //     .then((response) => response.json())
-//   //     .catch((e) => {
-//   //       console.error(e);
-//   //     });
-// };

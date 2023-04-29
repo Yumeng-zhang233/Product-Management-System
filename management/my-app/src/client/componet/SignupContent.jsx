@@ -8,21 +8,23 @@ function SignupContent() {
   const dispatch = useDispatch();
 
   const { signin, signup, update } = React.useContext(SigninContext);
-  const { userEmail, userPassword } = React.useContext(UserInfoContext);
-
+  const { userEmail, userPassword, userInfo } =
+    React.useContext(UserInfoContext);
   const { email, setEmail } = userEmail;
   const { password, setPassword } = userPassword;
+  const { user, setUser } = userInfo;
   const { isShowSignup, setIsShowSignup } = signup;
   const { isShowSignin, setIsShowSignin } = signin;
   const { isupdatePassword, setUpdatePassword } = update;
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     e.preventDefault();
     console.log(email, password);
     dispatch(addUser({ email, password }));
-    // addUser({ email, password });
-    setPassword("");
-    setEmail("");
+    setUser({ email, password });
+
+    const user = JSON.stringify({ email, password });
+    localStorage.setItem("user", user);
     setIsShowSignin(false);
   };
   const onClick = () => {

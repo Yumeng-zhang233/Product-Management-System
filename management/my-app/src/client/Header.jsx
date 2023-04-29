@@ -5,6 +5,9 @@ import { Input } from "antd";
 import { useSelector } from "react-redux";
 import { logout } from "./actions/index";
 import { useDispatch } from "react-redux";
+import { UserInfoContext } from "./UserInfoContext";
+import Button from "react-bootstrap/Button";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const { Search } = Input;
 
@@ -12,9 +15,13 @@ function Header() {
   const dispatch = useDispatch();
 
   const { signin, signup } = React.useContext(SigninContext);
-  let isLoggedin = useSelector((state) => state.status);
+  let isLoggedin = useSelector((state) => state.login.status);
   const { isShowSignin, setIsShowSignin } = signin;
-
+  const { userEmail, userPassword, userInfo } =
+    React.useContext(UserInfoContext);
+  const { email, setEmail } = userEmail;
+  const { password, setPassword } = userPassword;
+  const { user, setUser } = userInfo;
   function onSearch() {
     console.log("searched");
   }
@@ -32,17 +39,22 @@ function Header() {
           marginLeft: 230,
         }}
       />
-      <span
+      <Button
+        variant="primary"
         onClick={() => {
           setIsShowSignin(!isShowSignin);
           if (isLoggedin == true) {
             dispatch(logout());
+            setUser({});
+            setEmail("");
+            setPassword("");
+            localStorage.clear();
           }
         }}
         className="signin_icon"
       >
-        {isLoggedin ? "Sign out" : "Sign in"}
-      </span>
+        {isLoggedin ? "SignOut" : "SignIn"}
+      </Button>{" "}
       <i class="fas fa-shopping-cart"></i>{" "}
     </div>
   );

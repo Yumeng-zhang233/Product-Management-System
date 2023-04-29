@@ -5,7 +5,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const { v4: uuidv4 } = require("uuid");
 const User = require("./database/model");
-
+const Products = require("./database/productModel");
 const connectToMongoose = require("./database/connect");
 connectToMongoose();
 
@@ -24,11 +24,142 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-let users = [
-  { email: "123@gmail.com", password: "123456" },
-  { email: "wahaha@qq.com", password: "wahaha" },
-  { email: "julie123@gmail.com", password: "http123" },
+const products = [
+  {
+    productName: "iWatch",
+    description: "aaaaa",
+    category: "category1",
+    price: 120,
+    quantity: 20,
+    image: "https://m.media-amazon.com/images/I/51QNrr2cdBL._SX679_.jpg",
+  },
+  {
+    productName: "iphone",
+    description: "bbbbb",
+    category: "category1",
+    price: 820,
+    quantity: 10,
+    image: "https://m.media-amazon.com/images/I/51QNrr2cdBL._SX679_.jpg",
+  },
 ];
+app.get("/allProducts", async (_, res) => {
+  const productsFromDataBase = await Products.find({});
+  const productList = productsFromDataBase.map(
+    ({ productName, description, category, price, quantity, image, id }) => {
+      return {
+        productName,
+        description,
+        category,
+        price,
+        quantity,
+        image,
+        id,
+      };
+    }
+  );
+  res.json(productList);
+});
+app.post("/addProduct", async (req, res) => {
+  if (req.body && req.body.image && req.body.price) {
+    const { productName, description, category, price, quantity, image } =
+      req.body;
+    const newProduct = new Products({
+      productName,
+      description,
+      category,
+      price,
+      quantity,
+      image,
+      id: uuidv4(),
+    });
+
+    const retValue = await newProduct.save();
+    if (newProduct == retValue) {
+      res.status(201).json({
+        message: "added",
+        status: 201,
+        newProduct: {
+          productName: newProduct.productName,
+          description: newProduct.description,
+          category: newProduct.category,
+          price: newProduct.price,
+          quantity: newProduct.quantity,
+          image: newProduct.image,
+          id: newProduct.id,
+        },
+      });
+    }
+    // products.push(req.body);
+    // console.log(req.body);
+
+    // products = [...products, req.body];
+
+    // res.status(201).json({
+    //   message: "succeed",
+    //   status: 201,
+    // });
+    return;
+  }
+  //error handling
+  res.status(404).json({
+    error: "failed",
+    message: "Input is not valid",
+  });
+});
+app.put("/editProduct", async (req, res) => {
+  if (req.body && req.body.id) {
+    const id = req.body.id;
+    const queryResult = await Products.findOne({ id });
+
+    const { modifiedCount } = await queryResult.updateOne({
+      productName: req.body.productName,
+      description: req.body.description,
+      category: req.body.category,
+      price: req.body.price,
+      quantity: req.body.quantity,
+      image: req.body.image,
+    });
+    if (!modifiedCount) {
+      res.status(404).json({
+        message: "update field",
+      });
+      return;
+    }
+    res.status(200).json({
+      message: "update succeed",
+    });
+    // const index = req.body.index;
+    // let name = req.body.productName
+    //   ? req.body.productName
+    //   : products[index].productName;
+    // let itemDescription = req.body.description
+    //   ? req.body.description
+    //   : products[index].description;
+    // let itemCategory = req.body.category
+    //   ? req.body.category
+    //   : products[index].category;
+    // let itemPrice = req.body.price ? req.body.price : products[index].price;
+    // let itemQuantity = req.body.quantity
+    //   ? req.body.quantity
+    //   : products[index].quantity;
+    // let itemImage = req.body.image ? req.body.image : products[index].image;
+    // products[index].productName = name;
+    // products[index].description = itemDescription;
+    // products[index].category = itemCategory;
+    // products[index].price = itemPrice;
+    // products[index].quantity = itemQuantity;
+    // products[index].image = itemImage;
+    // res.json({
+    //   message: "succeed",
+    // });
+    return;
+  }
+  res.status(404).json({
+    error: "failed",
+    message: "Input is not valid",
+  });
+});
+
 app.get("/logout", async (_, res) => {
   const usersFromDataBase = await User.find({});
   const userList = usersFromDataBase.map(({ email, password, id }) => {

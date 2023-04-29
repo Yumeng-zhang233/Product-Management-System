@@ -26,7 +26,7 @@ function MyModal(props) {
         open={isShowSignin}
         footer={null}
         onCancel={onClick}
-        className="modal"
+        // className="modal"
       >
         {" "}
         {props.children}
