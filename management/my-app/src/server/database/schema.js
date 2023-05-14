@@ -11,6 +11,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    cart: [
+      {
+        itemAdded: String,
+        count: Number,
+      },
+    ],
     id: {
       type: String,
       required: true,

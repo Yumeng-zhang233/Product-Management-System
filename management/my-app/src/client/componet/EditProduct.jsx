@@ -35,7 +35,6 @@ function EditProduct() {
       id: originalInfo.id,
     };
     dispatch(editProductInfo(product));
-    console.log(product.price);
   };
   return (
     <div className="edit_product_container">

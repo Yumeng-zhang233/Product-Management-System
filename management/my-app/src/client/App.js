@@ -19,10 +19,12 @@ function App() {
   const [isCreatedProduct, setIsCreatedProduct] = useState(false);
   const [isProductDetail, setIsProductDetail] = useState(false);
   const [isEditProduct, setIsEditProduct] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState({});
+
   useEffect(() => {
     const loggedInUser = localStorage.getItem("user");
 
@@ -34,12 +36,31 @@ function App() {
 
       store.dispatch({
         type: "Login",
+        payload: {
+          login: true,
+          email: foundUser.email,
+          password: foundUser.password,
+          cart: foundUser.cart,
+        },
+      });
+
+      let map = new Map();
+      foundUser.cart.forEach((item) => {
+        if (!map.has(item.itemAdded)) {
+          map.set(item.itemAdded, item.count);
+        }
+      });
+      dispatch({
+        type: "UserCart",
+        payload: map,
       });
     }
   }, []);
+
   useEffect(() => {
     dispatch(initProducts());
   }, [dispatch]);
+
   return (
     <div className="App">
       <SigninContext.Provider
@@ -50,6 +71,7 @@ function App() {
           createProduct: { isCreatedProduct, setIsCreatedProduct },
           productDetail: { isProductDetail, setIsProductDetail },
           editProduct: { isEditProduct, setIsEditProduct },
+          openCart: { cartOpen, setCartOpen },
         }}
       >
         <UserInfoContext.Provider

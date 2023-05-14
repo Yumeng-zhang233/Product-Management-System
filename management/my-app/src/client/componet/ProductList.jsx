@@ -6,9 +6,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Product from "./Product";
 
 const ProductList = ({ currentItems }) => {
-  const products = useSelector((state) => state.product);
+  const userCart = useSelector((state) => state.user);
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(initProducts());
   }, [dispatch]);
@@ -26,11 +25,11 @@ const ProductList = ({ currentItems }) => {
                 price={item.price}
                 quantity={item.quantity}
                 image={item.image}
+                count={userCart.has(item.id) ? userCart.get(item.id) : 0}
                 id={item.id}
               />
             );
           })}
-        {/* <Pagination className="pagination">{items}</Pagination> */}
       </div>
     </div>
   );

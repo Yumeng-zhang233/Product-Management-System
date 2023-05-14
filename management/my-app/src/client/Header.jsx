@@ -8,24 +8,28 @@ import { useDispatch } from "react-redux";
 import { UserInfoContext } from "./UserInfoContext";
 import Button from "react-bootstrap/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import Badge from "react-bootstrap/Badge";
 
 const { Search } = Input;
 
 function Header() {
   const dispatch = useDispatch();
 
-  const { signin, signup } = React.useContext(SigninContext);
-  let isLoggedin = useSelector((state) => state.login.status);
+  const { signin, signup, openCart } = React.useContext(SigninContext);
+  let isLoggedin = useSelector((state) => state.login);
   const { isShowSignin, setIsShowSignin } = signin;
+  const { cartOpen, setCartOpen } = openCart;
+
   const { userEmail, userPassword, userInfo } =
     React.useContext(UserInfoContext);
   const { email, setEmail } = userEmail;
   const { password, setPassword } = userPassword;
   const { user, setUser } = userInfo;
+
   function onSearch() {
     console.log("searched");
   }
-
   return (
     <div className="header">
       <label className="header_label">Management</label>
@@ -43,19 +47,29 @@ function Header() {
         variant="primary"
         onClick={() => {
           setIsShowSignin(!isShowSignin);
-          if (isLoggedin == true) {
+          if (isLoggedin.login == true) {
             dispatch(logout());
             setUser({});
             setEmail("");
             setPassword("");
+            let map = new Map();
+            dispatch({
+              type: "UserCart",
+              payload: map,
+            });
             localStorage.clear();
           }
         }}
         className="signin_icon"
       >
-        {isLoggedin ? "SignOut" : "SignIn"}
+        {isLoggedin.login ? "SignOut" : "SignIn"}
       </Button>{" "}
-      <i class="fas fa-shopping-cart"></i>{" "}
+      <AiOutlineShoppingCart
+        className="cart_icon"
+        onClick={() => {
+          setCartOpen(true);
+        }}
+      />{" "}
     </div>
   );
 }

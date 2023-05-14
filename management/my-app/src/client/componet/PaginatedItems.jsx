@@ -29,14 +29,6 @@ function PaginatedItems({ itemsPerPage }) {
   const [showCreateProduct, setShowCreateProduct] = useState(false);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (email == "admin@gmail.com" && password == "123456") {
-      setShowCreateProduct(true);
-    } else if (email != "admin@gmail.com") {
-      setShowCreateProduct(false);
-    }
-  }, [password]);
-
   function ascendingPrice(a, b) {
     if (a.price < b.price) {
       return -1;
@@ -79,7 +71,7 @@ function PaginatedItems({ itemsPerPage }) {
             Price: low to high
           </Dropdown.Item>
         </DropdownButton>
-        {isLoggedin && showCreateProduct && (
+        {email == "admin@gmail.com" && password == "123456" && (
           <Button
             variant="light"
             onClick={() => {
@@ -91,7 +83,6 @@ function PaginatedItems({ itemsPerPage }) {
         )}
       </ButtonGroup>
 
-      {/* {isLoggedin && isCreatedProduct && <Home />} */}
       <ProductList currentItems={currentItems} />
       <div className="page">
         <ReactPaginate

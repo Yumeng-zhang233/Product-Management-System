@@ -6,6 +6,10 @@ import { useDispatch } from "react-redux";
 import { SigninContext } from "../SigninContext";
 import React, { useState, useContext, useEffect } from "react";
 import { UserInfoContext } from "../UserInfoContext";
+import Badge from "react-bootstrap/Badge";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import { useSelector } from "react-redux";
+import { addCart, increment, decrement } from "../actions";
 
 function Product({
   productName,
@@ -14,6 +18,7 @@ function Product({
   price,
   quantity,
   image,
+  count,
   id,
 }) {
   const { productDetail, editProduct } = React.useContext(SigninContext);
@@ -59,9 +64,39 @@ function Product({
       <Card.Body>
         <Card.Title>{productName}</Card.Title>
         <Card.Text>$ {price}</Card.Text>
-        <Button variant="outline-primary" className="product_button">
-          Add
-        </Button>{" "}
+        {count > 0 ? (
+          <ButtonGroup>
+            {" "}
+            <Badge
+              bg="secondary"
+              onClick={() => {
+                dispatch(increment({ user: email, itemAdded: id }));
+              }}
+            >
+              +
+            </Badge>
+            <label className="product_cart_quantity">{count} </label>{" "}
+            <Badge
+              bg="secondary"
+              onClick={() => {
+                dispatch(decrement({ user: email, itemAdded: id }));
+              }}
+            >
+              -
+            </Badge>
+          </ButtonGroup>
+        ) : (
+          <Button
+            variant="outline-primary"
+            className="product_button"
+            onClick={() => {
+              dispatch(addCart({ user: email, itemAdded: id, count: 1 }));
+            }}
+          >
+            Add
+          </Button>
+        )}
+
         {showEditButton && (
           <Button
             variant="outline-secondary"

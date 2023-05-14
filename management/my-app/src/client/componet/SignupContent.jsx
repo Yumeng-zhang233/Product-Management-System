@@ -1,8 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { SigninContext } from "../SigninContext";
 import { UserInfoContext } from "../UserInfoContext";
 import { addUser } from "../actions/index";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function SignupContent() {
   const dispatch = useDispatch();
@@ -10,23 +10,21 @@ function SignupContent() {
   const { signin, signup, update } = React.useContext(SigninContext);
   const { userEmail, userPassword, userInfo } =
     React.useContext(UserInfoContext);
+
   const { email, setEmail } = userEmail;
   const { password, setPassword } = userPassword;
   const { user, setUser } = userInfo;
   const { isShowSignup, setIsShowSignup } = signup;
   const { isShowSignin, setIsShowSignin } = signin;
   const { isupdatePassword, setUpdatePassword } = update;
+  const isLoggedin = useSelector((state) => state.login);
 
-  const handleChange = async (e) => {
+  const handleChange = (e) => {
     e.preventDefault();
-    console.log(email, password);
     dispatch(addUser({ email, password }));
-    setUser({ email, password });
-
-    const user = JSON.stringify({ email, password });
-    localStorage.setItem("user", user);
     setIsShowSignin(false);
   };
+
   const onClick = () => {
     setIsShowSignup(false);
   };

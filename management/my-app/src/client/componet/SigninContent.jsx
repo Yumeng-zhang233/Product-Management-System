@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { SigninContext } from "../SigninContext";
 import { UserInfoContext } from "../UserInfoContext";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../actions/index";
 
 function SigninContent() {
@@ -17,15 +17,12 @@ function SigninContent() {
   const { isupdatePassword, setUpdatePassword } = update;
   const { isShowSignin, setIsShowSignin } = signin;
 
-  const handleChange = async (e) => {
-    e.preventDefault();
-    dispatch(login({ email, password }));
-    console.log(email, password);
-    setUser({ email, password });
+  const isLoggedin = useSelector((state) => state.login);
 
-    const user = JSON.stringify({ email, password });
-    localStorage.setItem("user", user);
-    console.log(user);
+  const handleChange = (e) => {
+    e.preventDefault();
+
+    dispatch(login({ email, password }));
     setIsShowSignin(false);
   };
 

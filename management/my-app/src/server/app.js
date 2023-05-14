@@ -89,15 +89,7 @@ app.post("/addProduct", async (req, res) => {
         },
       });
     }
-    // products.push(req.body);
-    // console.log(req.body);
 
-    // products = [...products, req.body];
-
-    // res.status(201).json({
-    //   message: "succeed",
-    //   status: 201,
-    // });
     return;
   }
   //error handling
@@ -126,32 +118,9 @@ app.put("/editProduct", async (req, res) => {
       return;
     }
     res.status(200).json({
+      status: 200,
       message: "update succeed",
     });
-    // const index = req.body.index;
-    // let name = req.body.productName
-    //   ? req.body.productName
-    //   : products[index].productName;
-    // let itemDescription = req.body.description
-    //   ? req.body.description
-    //   : products[index].description;
-    // let itemCategory = req.body.category
-    //   ? req.body.category
-    //   : products[index].category;
-    // let itemPrice = req.body.price ? req.body.price : products[index].price;
-    // let itemQuantity = req.body.quantity
-    //   ? req.body.quantity
-    //   : products[index].quantity;
-    // let itemImage = req.body.image ? req.body.image : products[index].image;
-    // products[index].productName = name;
-    // products[index].description = itemDescription;
-    // products[index].category = itemCategory;
-    // products[index].price = itemPrice;
-    // products[index].quantity = itemQuantity;
-    // products[index].image = itemImage;
-    // res.json({
-    //   message: "succeed",
-    // });
     return;
   }
   res.status(404).json({
@@ -162,10 +131,11 @@ app.put("/editProduct", async (req, res) => {
 
 app.get("/logout", async (_, res) => {
   const usersFromDataBase = await User.find({});
-  const userList = usersFromDataBase.map(({ email, password, id }) => {
+  const userList = usersFromDataBase.map(({ email, password, cart, id }) => {
     return {
       email,
       password,
+      cart,
       id,
     };
   });
@@ -196,6 +166,7 @@ app.post("/addUser", async (req, res) => {
         newUser: {
           email: newUser.email,
           password: newUser.password,
+          cart: newUser.cart,
           id: newUser.id,
         },
       });
@@ -217,6 +188,12 @@ app.post("/login", async (req, res) => {
         res.status(200).json({
           message: "user logged in",
           status: 200,
+          currentUser: {
+            email: queryResult.email,
+            password: queryResult.password,
+            cart: queryResult.cart,
+            id: queryResult.id,
+          },
         });
       } else {
         res.status(401).json({
@@ -237,6 +214,161 @@ app.post("/login", async (req, res) => {
     message: "input faild",
   });
 });
+
+app.post("/addCart", async (req, res) => {
+  if (req.body && req.body.user && req.body.itemAdded && req.body.count) {
+    const { user, itemAdded, count } = req.body;
+    let cartInfo = {
+      itemAdded: itemAdded,
+      count: count,
+    };
+    let currentUser = await User.findOne({ email: user });
+    currentUser.cart.push(cartInfo);
+    await currentUser.save();
+    console.log(currentUser);
+
+    if (
+      currentUser.cart[currentUser.cart.length - 1].itemAdded ==
+      cartInfo.itemAdded
+    ) {
+      res.status(201).json({
+        message: "cart added",
+        status: 201,
+      });
+
+      return;
+    } else {
+      res.status(404).json({
+        error: "failed",
+        message: "Input is not valid",
+      });
+    }
+
+    return;
+  }
+
+  res.status(404).json({
+    error: "failed",
+    message: "Input is not valid",
+  });
+});
+
+app.put("/increment", async (req, res) => {
+  if (req.body && req.body.user && req.body.itemAdded) {
+    const { user, itemAdded } = req.body;
+    let test = 0;
+    let currentUser = await User.findOne({ email: user });
+
+    currentUser.cart.forEach((item) => {
+      if (item.itemAdded === itemAdded) {
+        test = item.count;
+        item.count++;
+      }
+    });
+    await currentUser.save();
+    let tmp = 0;
+    await currentUser.save();
+    currentUser.cart.forEach((item) => {
+      if (item.itemAdded === itemAdded) {
+        tmp = item.count;
+      }
+    });
+    if (tmp === test + 1) {
+      res.status(201).json({
+        message: "item increment",
+        status: 201,
+        cartUpdated: { itemAdded: itemAdded, count: test + 1 },
+      });
+
+      return;
+    } else {
+      res.status(404).json({
+        error: "failed",
+        message: "Input is not valid",
+      });
+    }
+    return;
+  }
+
+  res.status(404).json({
+    error: "failed",
+    message: "Input is not valid",
+  });
+});
+
+app.put("/decrement", async (req, res) => {
+  if (req.body && req.body.user && req.body.itemAdded) {
+    const { user, itemAdded } = req.body;
+    let test = 0;
+    let currentUser = await User.findOne({ email: user });
+
+    currentUser.cart.forEach((item) => {
+      if (item.itemAdded === itemAdded) {
+        test = item.count;
+        if (item.count > 1) {
+          item.count--;
+        }
+      }
+    });
+    let tmp = 0;
+    await currentUser.save();
+    currentUser.cart.forEach((item) => {
+      if (item.itemAdded === itemAdded) {
+        tmp = item.count;
+      }
+    });
+    if (tmp === 1 || tmp === test - 1) {
+      res.status(201).json({
+        message: "item decrement",
+        status: 201,
+        cartUpdated: { itemAdded: itemAdded, count: tmp },
+      });
+
+      return;
+    } else {
+      res.status(404).json({
+        error: "failed",
+        message: "Input is not valid",
+      });
+    }
+    return;
+  }
+
+  res.status(404).json({
+    error: "failed",
+    message: "Input is not valid",
+  });
+});
+
+app.put("/itemDetail", async (req, res) => {
+  if (req.body && req.body.id) {
+    const id = req.body.id;
+    const queryResult = await Products.findOne({ id });
+    if (queryResult) {
+      res.status(200).json({
+        message: "item founded",
+        status: 200,
+        itemInfo: {
+          productName: queryResult.productName,
+          price: queryResult.price,
+          image: queryResult.image,
+        },
+      });
+      return;
+    } else {
+      res.status(404).json({
+        error: "failed",
+        message: "failed to find the product",
+      });
+    }
+    return;
+  }
+  res.status(404).json({
+    error: "failed",
+    message: "Input is not valid",
+  });
+});
+
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 

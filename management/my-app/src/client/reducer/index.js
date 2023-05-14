@@ -1,18 +1,48 @@
 import { combineReducers } from "redux";
 
-export const loginReducer = (state = { status: false }, action) => {
-  switch (action.type) {
+export const loginReducer = (state = {}, { type, payload }) => {
+  switch (type) {
     case "Login":
-      return { status: true };
+      return payload;
     case "Logout":
-      return { status: false };
+      return { ...state, login: payload };
     default:
       return state;
   }
 };
+let map = new Map();
+export const userReducer = (state = map, { type, payload }) => {
+  switch (type) {
+    case "UserCart":
+      return payload;
+    case "Increment":
+      return new Map(state.set(payload.itemAdded, payload.count));
+    case "Decrement":
+      return new Map(state.set(payload.itemAdded, payload.count));
+    default:
+      return state;
+  }
+};
+export const cartReducer = (state = [], { type, payload }) => {
+  switch (type) {
+    case "AddCart":
+      return [...state, payload];
+    default:
+      return state;
+  }
+};
+
 export const cardReducer = (state = {}, { type, payload }) => {
   switch (type) {
     case "Detail":
+      return payload;
+    default:
+      return state;
+  }
+};
+export const itemReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+    case "ItemInfo":
       return payload;
     default:
       return state;
@@ -73,6 +103,9 @@ export const errorReducer = (
 export default combineReducers({
   login: loginReducer,
   detail: cardReducer,
+  user: userReducer,
+  item: itemReducer,
   product: productReducer,
+  cart: cartReducer,
   error: errorReducer,
 });

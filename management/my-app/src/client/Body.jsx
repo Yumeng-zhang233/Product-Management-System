@@ -11,41 +11,38 @@ import ProductList from "./componet/ProductList";
 import { useDispatch } from "react-redux";
 import { initProducts } from "./actions";
 import BodyHome from "./componet/BodyHome";
+import ShoppingCart from "./componet/ShoppingCart";
+import CartModal from "./componet/BodyContent";
 
 function Body() {
   const dispatch = useDispatch();
 
   const { signin, signup, createProduct } = React.useContext(SigninContext);
-  const { userEmail } = React.useContext(UserInfoContext);
+  const { userEmail, userPassword, userInfo } =
+    React.useContext(UserInfoContext);
   const { isShowSignin, setIsShowSignin } = signin;
   const { isShowSignup, setIsShowSignup } = signup;
   const { isCreatedProduct, setIsCreatedProduct } = createProduct;
-
+  const { password, setPassword } = userPassword;
+  const { user, setUser } = userInfo;
   const { email, setEmail } = userEmail;
   const [showCreateProduct, setShowCreateProduct] = useState(false);
 
-  let isLoggedin = useSelector((state) => state.login.status);
+  let isLoggedin = useSelector((state) => state.login);
 
   return (
     <div className="body">
-      {isShowSignin && !isLoggedin && <Signin />}
+      <CartModal>
+        <ShoppingCart />
+      </CartModal>
 
-      {isLoggedin && (
+      {isShowSignin && !isLoggedin.login && <Signin />}
+
+      {isLoggedin.login && (
         <Badge className="badge" pill bg="light" text="dark">
           {email}{" "}
         </Badge>
       )}
-      {/* {isLoggedin && showCreateProduct && (
-        <button
-          className="add_product_button"
-          onClick={() => {
-            setIsCreatedProduct(true);
-          }}
-        >
-          Add Product
-        </button>
-      )}
-      {isLoggedin && isCreatedProduct && <Home />} */}
       <BodyHome />
     </div>
   );
