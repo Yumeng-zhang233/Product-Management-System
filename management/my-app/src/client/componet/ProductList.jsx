@@ -26,6 +26,7 @@ const ProductList = ({ currentItems }) => {
                 quantity={item.quantity}
                 image={item.image}
                 count={userCart.has(item.id) ? userCart.get(item.id) : 0}
+                // count={userCart.has(item.id) ? userCart.get(item.id).count : 0}
                 id={item.id}
               />
             );

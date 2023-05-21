@@ -19,9 +19,21 @@ export const userReducer = (state = map, { type, payload }) => {
       return new Map(state.set(payload.itemAdded, payload.count));
     case "Decrement":
       return new Map(state.set(payload.itemAdded, payload.count));
+    case "DeleteItem":
+      return payload;
     default:
       return state;
   }
+  // switch (type) {
+  //   case "UserCart":
+  //     return payload;
+  //   case "Increment":
+  //     return new Map(state.set(payload.itemAdded, payload.obj));
+  //   case "Decrement":
+  //     return new Map(state.set(payload.itemAdded, payload.obj));
+  //   default:
+  //     return state;
+  // }
 };
 export const cartReducer = (state = [], { type, payload }) => {
   switch (type) {

@@ -142,7 +142,6 @@ export const login =
     fetch("/login", ajaxConfigHelper({ email, password }))
       .then((response) => response.json())
       .then(({ currentUser: { email, password, cart, id } }) => {
-        // if (response.status == 200) {
         //update local storage;
         localStorage.setItem(
           "user",
@@ -177,9 +176,6 @@ export const login =
           type: "UserCart",
           payload: map,
         });
-        // } else {
-        //   alert("email and password do not match");
-        // }
       })
       .catch((e) => {
         console.error(e);
@@ -310,3 +306,39 @@ export async function itemDetail(id) {
     console.log(error);
   }
 }
+
+export const deleteItem = (product) => (dispatch) => {
+  fetch("/deleteItem", ajaxConfigHelper(product, "PUT"))
+    .then((response) => response.json())
+    .then((response) => {
+      if (response.status == 200) {
+        const loggedInUser = localStorage.getItem("user");
+        const currentUser = JSON.parse(loggedInUser);
+        let map = new Map();
+
+        if (currentUser) {
+          currentUser.cart.forEach((item) => {
+            if (item.itemAdded === product.id) {
+              let index = currentUser.cart.indexOf(item);
+              currentUser.cart.splice(index, 1);
+            }
+
+            localStorage.setItem("user", JSON.stringify(currentUser));
+          });
+          currentUser.cart.forEach((item) => {
+            if (!map.has(item.itemAdded)) {
+              map.set(item.itemAdded, item.count);
+            }
+          });
+        }
+        console.log(map);
+        dispatch({
+          type: "DeleteItem",
+          payload: map,
+        });
+      }
+    })
+    .catch((e) => {
+      console.error(e);
+    });
+};

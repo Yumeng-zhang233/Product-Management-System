@@ -1,6 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import { SigninContext } from "../SigninContext";
 import { Container, Button } from "react-bootstrap";
+import Form from "react-bootstrap/Form";
+import Badge from "react-bootstrap/Badge";
+
 import SubTotal from "./cart/SubTotal";
 import PickupSavings from "./cart/PickupSavings";
 import TaxesFees from "./cart/TaxesFees";
@@ -30,12 +33,20 @@ function ShoppingCart() {
             />
           );
         })}
-        {/* <ItemDetails /> */}
-        <br />
+        <Badge bg="light" text="dark">
+          Apply discount code
+        </Badge>{" "}
+        <Form className="d-flex">
+          <Form.Control
+            type="search"
+            placeholder="Search"
+            className="me-2"
+            aria-label="Search"
+          />
+          <Button variant="outline-secondary">Apply</Button>
+        </Form>
         <SubTotal />
-        <br />
         <PickupSavings />
-        <br />
         <TaxesFees />
         <hr />
         <EstimatedTotal />

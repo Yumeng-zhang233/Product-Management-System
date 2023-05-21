@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import { increment, decrement } from "../../actions";
-import { itemDetail } from "../../actions";
+import { itemDetail, deleteItem } from "../../actions";
 import { UserInfoContext } from "../../UserInfoContext";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -84,7 +84,13 @@ const ItemDetails = ({ count, id }) => {
                   </ButtonGroup>
                 </Col>
                 <Col xs={6}>
-                  <Button variant="outline-secondary" size="sm">
+                  <Button
+                    variant="outline-secondary"
+                    size="sm"
+                    onClick={() => {
+                      dispatch(deleteItem({ user: email, id: id }));
+                    }}
+                  >
                     Remove
                   </Button>
                 </Col>

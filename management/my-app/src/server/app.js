@@ -368,6 +368,38 @@ app.put("/itemDetail", async (req, res) => {
     message: "Input is not valid",
   });
 });
+app.put("/deleteItem", async (req, res) => {
+  if (req.body && req.body.user && req.body.id) {
+    const id = req.body.id;
+    const user = req.body.user;
+    const queryResult = await User.findOneAndUpdate(
+      { email: user },
+      { $pull: { cart: { itemAdded: id } } },
+      { safe: true, multi: false }
+    );
+
+    const newQueryResult = await User.findOne({ email: user });
+    console.log(newQueryResult.cart);
+    if (queryResult.cart.length != newQueryResult.cart.length) {
+      res.status(200).json({
+        message: "item removed",
+        status: 200,
+        itemInfo: newQueryResult.cart,
+      });
+      return;
+    } else {
+      res.status(404).json({
+        error: "failed",
+        message: "failed to find the product",
+      });
+    }
+    return;
+  }
+  res.status(404).json({
+    error: "failed",
+    message: "Input is not valid",
+  });
+});
 
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);

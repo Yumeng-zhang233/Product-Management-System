@@ -90,7 +90,16 @@ function Product({
             variant="outline-primary"
             className="product_button"
             onClick={() => {
-              dispatch(addCart({ user: email, itemAdded: id, count: 1 }));
+              dispatch(
+                addCart({
+                  user: email,
+                  productName: productName,
+                  price: price,
+                  image: image,
+                  itemAdded: id,
+                  count: 1,
+                })
+              );
             }}
           >
             Add
