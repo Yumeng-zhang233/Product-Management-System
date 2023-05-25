@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { SigninContext } from "../SigninContext";
 import { Container, Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
@@ -15,41 +15,78 @@ import "../App.css";
 
 function ShoppingCart() {
   const userCart = useSelector((state) => state.user);
-  // const loggedInUser = localStorage.getItem("user");
-  // const foundUser = JSON.parse(loggedInUser);
+  const charge = useSelector((state) => state.charge);
+
+  const [code, setCode] = useState("");
+  const [codeApplied, setCodeApplied] = useState(false);
+  const [discountFee, setDiscountFee] = useState(0);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (code === "helloworld") {
+      const codeApplied = "helloworld";
+      localStorage.setItem("code", JSON.stringify(codeApplied));
+
+      setDiscountFee(charge * 0.15);
+      setCodeApplied(true);
+    } else {
+      setDiscountFee(0);
+      setCodeApplied(false);
+      localStorage.removeItem("code");
+    }
+    event.target.reset();
+  };
+  useEffect(() => {
+    const codeApplied = localStorage.getItem("code");
+    if (codeApplied) {
+      const currentCharge = localStorage.getItem("purchase amount");
+      const total = JSON.parse(currentCharge);
+      setDiscountFee(total * 0.15);
+      setCodeApplied(true);
+    } else {
+      setCodeApplied(false);
+    }
+  }, [userCart]);
+  useEffect(() => {
+    if (discountFee != 0) {
+      setDiscountFee(charge * 0.15);
+    }
+  }, [charge]);
 
   return (
     <div className="purchase-card">
       <Container>
         {Array.from(userCart, ([key, value]) => {
-          return (
-            <ItemDetails
-              key={key}
-              // productName={itemInfo.productName}
-              // price={itemInfo.price}
-              // image={itemInfo.image}
-              count={value}
-              id={key}
-            />
-          );
+          return <ItemDetails key={key} count={value} id={key} />;
         })}
-        <Badge bg="light" text="dark">
-          Apply discount code
-        </Badge>{" "}
-        <Form className="d-flex">
+        {codeApplied ? (
+          <Badge bg="light" text="info">
+            Code Applied
+          </Badge>
+        ) : (
+          <Badge bg="light" text="dark">
+            Apply discount code
+          </Badge>
+        )}
+        <Form className="d-flex" onSubmit={handleSubmit}>
           <Form.Control
-            type="search"
-            placeholder="Search"
+            type="text"
+            placeholder="Coupon"
             className="me-2"
-            aria-label="Search"
+            aria-label="Coupon"
+            onChange={(e) => {
+              setCode(e.target.value);
+            }}
           />
-          <Button variant="outline-secondary">Apply</Button>
+          <Button variant="outline-secondary" type="submit">
+            Apply
+          </Button>
         </Form>
         <SubTotal />
-        <PickupSavings />
+        <PickupSavings value={discountFee} />
         <TaxesFees />
         <hr />
-        <EstimatedTotal />
+        <EstimatedTotal value={discountFee} />
       </Container>
       <Button variant="dark" className="cart_button">
         Checkout{" "}

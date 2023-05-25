@@ -1,7 +1,5 @@
 import { SigninContext } from "../SigninContext";
-import { UserInfoContext } from "../UserInfoContext";
 import React, { useState, useContext } from "react";
-import ProductList from "./ProductList";
 import BodyModal from "./BodyModal";
 import "../App.css";
 import ProductDetails from "./ProductDetails";
@@ -17,7 +15,6 @@ function BodyHome() {
 
   const { createProduct, productDetail, editProduct } =
     React.useContext(SigninContext);
-  const { userEmail, userPassword } = React.useContext(UserInfoContext);
   const { isCreatedProduct, setIsCreatedProduct } = createProduct;
 
   const { isProductDetail, setIsProductDetail } = productDetail;
@@ -61,7 +58,7 @@ function BodyHome() {
     return (
       <>
         <BodyModal title={header}>
-          <PaginatedItems itemsPerPage={5} />
+          <PaginatedItems itemsPerPage={6} />
         </BodyModal>
       </>
     );

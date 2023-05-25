@@ -25,8 +25,7 @@ const ProductList = ({ currentItems }) => {
                 price={item.price}
                 quantity={item.quantity}
                 image={item.image}
-                count={userCart.has(item.id) ? userCart.get(item.id) : 0}
-                // count={userCart.has(item.id) ? userCart.get(item.id).count : 0}
+                count={userCart.has(item.id) ? userCart.get(item.id).count : 0}
                 id={item.id}
               />
             );
@@ -37,36 +36,3 @@ const ProductList = ({ currentItems }) => {
 };
 
 export default ProductList;
-
-// const ProductList = () => {
-//   const products = useSelector((state) => state.product);
-//   const dispatch = useDispatch();
-
-//   useEffect(() => {
-//     dispatch(initProducts());
-//   }, [dispatch]);
-//   return (
-//     <div>
-//       <div className="product_list">
-//         {products.map((item) => {
-//           return (
-//             <Product
-//               key={item.id}
-//               productName={item.productName}
-//               description={item.description}
-//               category={item.category}
-//               price={item.price}
-//               quantity={item.quantity}
-//               image={item.image}
-//               id={item.id}
-//             />
-//           );
-//         })}
-//         <PaginatedItems itemsPerPage={4} />
-//         {/* <Pagination className="pagination">{items}</Pagination> */}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProductList;

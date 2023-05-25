@@ -1,37 +1,36 @@
 import React, { Component } from "react";
 import { Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 
 var styles = {
   pickupSavings: {
     textDecoration: "underline",
   },
   totalSavings: {
-    color: "red",
+    color: "grey",
     fontWeight: 800,
   },
 };
 
-export default class PickupSavings extends Component {
-  render() {
-    const tooltip = (
-      <Tooltip id="tooltip-bottom">
-        <p>
-          Picking up your order in the store helps cut costs, and we pass the
-          savings on to you.
-        </p>
-      </Tooltip>
-    );
-    return (
-      <Row>
-        <Col xs={6}>
-          <OverlayTrigger key="overlay" placement="bottom" overlay={tooltip}>
-            <div style={styles.pickupSavings}>Pickup Savings</div>
-          </OverlayTrigger>
-        </Col>
-        <Col xs={6} style={styles.totalSavings}>
-          $-7.99
-        </Col>
-      </Row>
-    );
-  }
+function PickupSavings(props) {
+  const charge = useSelector((state) => state.charge);
+
+  const tooltip = (
+    <Tooltip id="tooltip-bottom">
+      <p>Enter the coupon code, enjoy 15% discount</p>
+    </Tooltip>
+  );
+  return (
+    <Row>
+      <Col xs={6}>
+        <OverlayTrigger key="overlay" placement="bottom" overlay={tooltip}>
+          <div style={styles.pickupSavings}>Discount</div>
+        </OverlayTrigger>
+      </Col>
+      <Col xs={6} style={styles.totalSavings}>
+        -${props.value.toFixed(2)}
+      </Col>
+    </Row>
+  );
 }
+export default PickupSavings;

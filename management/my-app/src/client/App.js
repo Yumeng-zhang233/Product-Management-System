@@ -45,9 +45,16 @@ function App() {
       });
 
       let map = new Map();
+
       foundUser.cart.forEach((item) => {
         if (!map.has(item.itemAdded)) {
-          map.set(item.itemAdded, item.count);
+          let obj = {
+            productName: item.productName,
+            price: item.price,
+            image: item.image,
+            count: item.count,
+          };
+          map.set(item.itemAdded, obj);
         }
       });
       dispatch({

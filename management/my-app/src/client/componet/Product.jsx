@@ -56,6 +56,7 @@ function Product({
               price,
               quantity,
               image,
+              count,
               id,
             },
           });
@@ -90,16 +91,34 @@ function Product({
             variant="outline-primary"
             className="product_button"
             onClick={() => {
-              dispatch(
-                addCart({
-                  user: email,
+              const loggedInUser = localStorage.getItem("user");
+              if (loggedInUser) {
+                dispatch(
+                  addCart({
+                    user: email,
+                    productName: productName,
+                    price: price,
+                    image: image,
+                    itemAdded: id,
+                    count: 1,
+                  })
+                );
+              } else {
+                const res = localStorage.getItem("unkonowUser");
+                let itemList = [];
+                if (res) {
+                  itemList = JSON.parse(res);
+                }
+                const item = {
                   productName: productName,
                   price: price,
                   image: image,
                   itemAdded: id,
                   count: 1,
-                })
-              );
+                };
+                itemList.push(item);
+                localStorage.setItem("unkonowUser", JSON.stringify(itemList));
+              }
             }}
           >
             Add

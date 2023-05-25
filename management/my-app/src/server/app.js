@@ -101,7 +101,26 @@ app.post("/addProduct", async (req, res) => {
 app.put("/editProduct", async (req, res) => {
   if (req.body && req.body.id) {
     const id = req.body.id;
+    const email = req.body.email;
     const queryResult = await Products.findOne({ id });
+    const currentUser = await User.findOne({ email });
+    if (currentUser) {
+      currentUser.cart.forEach((item) => {
+        if (item.itemAdded === id) {
+          item.productName = req.body.productName
+            ? req.body.productName
+            : item.productName;
+          item.price = req.body.price ? req.body.price : item.price;
+          item.image = req.body.image ? req.body.image : item.image;
+        }
+      });
+      await currentUser.save();
+    } else {
+      res.status(404).json({
+        message: "failed to find the registered user",
+      });
+      return;
+    }
 
     const { modifiedCount } = await queryResult.updateOne({
       productName: req.body.productName,
@@ -113,7 +132,7 @@ app.put("/editProduct", async (req, res) => {
     });
     if (!modifiedCount) {
       res.status(404).json({
-        message: "update field",
+        message: "update faild",
       });
       return;
     }
@@ -216,11 +235,20 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/addCart", async (req, res) => {
-  if (req.body && req.body.user && req.body.itemAdded && req.body.count) {
-    const { user, itemAdded, count } = req.body;
+  if (
+    req.body &&
+    req.body.user &&
+    req.body.price &&
+    req.body.itemAdded &&
+    req.body.count
+  ) {
+    const { user, productName, price, image, itemAdded, count } = req.body;
     let cartInfo = {
-      itemAdded: itemAdded,
-      count: count,
+      productName,
+      price,
+      image,
+      itemAdded,
+      count,
     };
     let currentUser = await User.findOne({ email: user });
     currentUser.cart.push(cartInfo);

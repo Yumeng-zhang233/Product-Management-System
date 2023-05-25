@@ -8,12 +8,10 @@ import { initProducts } from "../actions";
 import { useSelector } from "react-redux";
 import ProductList from "./ProductList";
 import "../App.css";
-import Home from "./Home";
 import Button from "react-bootstrap/Button";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import Dropdown from "react-bootstrap/Dropdown";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useDispatch } from "react-redux";
 
 function PaginatedItems({ itemsPerPage }) {
   const products = useSelector((state) => state.product);
@@ -25,9 +23,6 @@ function PaginatedItems({ itemsPerPage }) {
   let [sortedProduct, setSortedProduct] = useState(products);
   const { email, setEmail } = userEmail;
   const { password, setPassword } = userPassword;
-
-  const [showCreateProduct, setShowCreateProduct] = useState(false);
-  const dispatch = useDispatch();
 
   function ascendingPrice(a, b) {
     if (a.price < b.price) {

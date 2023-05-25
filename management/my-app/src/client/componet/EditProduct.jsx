@@ -18,14 +18,15 @@ function EditProduct() {
   const [quantity, setQuantity] = useState(originalInfo.quantityn);
   const [image, setImage] = useState(originalInfo.image);
   const { editProduct } = React.useContext(SigninContext);
-
+  const { userEmail } = React.useContext(UserInfoContext);
+  const { email, setEmail } = userEmail;
   const { isEditProduct, setIsEditProduct } = editProduct;
 
   const handleChange = async (e) => {
     e.preventDefault();
-    console.log(price);
 
     let product = {
+      email: email,
       productName: productName,
       description: description,
       category: category,

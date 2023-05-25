@@ -16,24 +16,27 @@ export const userReducer = (state = map, { type, payload }) => {
     case "UserCart":
       return payload;
     case "Increment":
-      return new Map(state.set(payload.itemAdded, payload.count));
+      return new Map(state.set(payload.itemAdded, payload.obj));
     case "Decrement":
-      return new Map(state.set(payload.itemAdded, payload.count));
+      return new Map(state.set(payload.itemAdded, payload.obj));
     case "DeleteItem":
+      return payload;
+    case "EditItem":
+      return new Map(state.set(payload.itemAdded, payload.obj));
+    default:
+      return state;
+  }
+};
+
+export const chargeReducer = (state = 0, { type, payload }) => {
+  switch (type) {
+    case "SubTotal":
+      return payload;
+    case "Discount":
       return payload;
     default:
       return state;
   }
-  // switch (type) {
-  //   case "UserCart":
-  //     return payload;
-  //   case "Increment":
-  //     return new Map(state.set(payload.itemAdded, payload.obj));
-  //   case "Decrement":
-  //     return new Map(state.set(payload.itemAdded, payload.obj));
-  //   default:
-  //     return state;
-  // }
 };
 export const cartReducer = (state = [], { type, payload }) => {
   switch (type) {
@@ -48,6 +51,8 @@ export const cardReducer = (state = {}, { type, payload }) => {
   switch (type) {
     case "Detail":
       return payload;
+    case "UpdateDetail":
+      return { ...state, count: payload };
     default:
       return state;
   }
@@ -116,6 +121,7 @@ export default combineReducers({
   login: loginReducer,
   detail: cardReducer,
   user: userReducer,
+  charge: chargeReducer,
   item: itemReducer,
   product: productReducer,
   cart: cartReducer,

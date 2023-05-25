@@ -49,43 +49,35 @@ export const addProduct = (content) => (dispatch) => {
 };
 export const editProductInfo = (product) => async (dispatch) => {
   try {
-    //const data = await todoApi.modTodo(index);
     const response = await fetch(
       "/editProduct",
       ajaxConfigHelper(product, "PUT")
     );
     const result = await response.json();
     if (result.status === 200) {
-      const storedItemInfo = localStorage.getItem(`itemInfo_${product.id}`);
-      const itemInfo = JSON.parse(storedItemInfo);
-
-      if (itemInfo) {
-        let name = product.productName
-          ? product.productName
-          : itemInfo.productName;
-
-        let itemPrice = product.price ? product.price : itemInfo.price;
-        let itemImage = product.image ? product.image : itemInfo.image;
-        let editedInfo = {
-          productName: name,
-          price: itemPrice,
-          image: itemImage,
-        };
-        localStorage.setItem(
-          `itemInfo_${product.id}`,
-          JSON.stringify(editedInfo)
-        );
-        let map = new Map();
-        const loggedInUser = localStorage.getItem("user");
-        const currentUser = JSON.parse(loggedInUser);
+      const loggedInUser = localStorage.getItem("user");
+      const currentUser = JSON.parse(loggedInUser);
+      if (currentUser) {
+        let obj = {};
         currentUser.cart.forEach((item) => {
-          if (!map.has(item.itemAdded)) {
-            map.set(item.itemAdded, item.count);
+          if (item.itemAdded === product.id) {
+            item.productName = product.productName
+              ? product.productName
+              : item.productName;
+            item.price = product.price ? product.price : item.price;
+            item.image = product.image ? product.image : item.image;
+
+            obj.productName = item.productName;
+            obj.price = item.price;
+            obj.image = item.image;
+            obj.count = item.count;
           }
+          localStorage.setItem("user", JSON.stringify(currentUser));
         });
+
         dispatch({
-          type: "UserCart",
-          payload: map,
+          type: "EditItem",
+          payload: { itemAdded: product.id, obj },
         });
       }
       dispatch({
@@ -104,7 +96,6 @@ export const addUser =
     fetch("/addUser", ajaxConfigHelper({ email, password }))
       .then((response) => response.json())
       .then(({ newUser: { email, password, cart, id } }) => {
-        // if (response.status == 201) {
         localStorage.setItem(
           "user",
           JSON.stringify({
@@ -167,9 +158,13 @@ export const login =
         let map = new Map();
         cart.forEach((item) => {
           if (!map.has(item.itemAdded)) {
-            map.set(item.itemAdded, {
+            let obj = {
+              productName: item.productName,
+              price: item.price,
+              image: item.image,
               count: item.count,
-            });
+            };
+            map.set(item.itemAdded, obj);
           }
         });
         dispatch({
@@ -185,7 +180,6 @@ export const login =
 export const logout = () => async (dispatch) => {
   try {
     const response = await fetch("/logout");
-    console.log(await response.json());
     dispatch({
       type: "Logout",
       payload: false,
@@ -195,9 +189,12 @@ export const logout = () => async (dispatch) => {
   }
 };
 export const addCart =
-  ({ user, itemAdded, count }) =>
+  ({ user, productName, price, image, itemAdded, count }) =>
   (dispatch) => {
-    fetch("/addCart", ajaxConfigHelper({ user, itemAdded, count }))
+    fetch(
+      "/addCart",
+      ajaxConfigHelper({ user, productName, price, image, itemAdded, count })
+    )
       .then((response) => response.json())
       .then((response) => {
         if (response.status == 201) {
@@ -206,10 +203,22 @@ export const addCart =
           const currentUser = JSON.parse(loggedInUser);
           if (currentUser) {
             let map = new Map();
-            currentUser.cart.push({ itemAdded, count });
+            currentUser.cart.push({
+              productName,
+              price,
+              image,
+              itemAdded,
+              count,
+            });
             currentUser.cart.forEach((item) => {
               if (!map.has(item.itemAdded)) {
-                map.set(item.itemAdded, item.count);
+                let obj = {
+                  productName: item.productName,
+                  price: item.price,
+                  image: item.image,
+                  count: item.count,
+                };
+                map.set(item.itemAdded, obj);
               }
             });
             dispatch({
@@ -235,10 +244,15 @@ export const increment = (product) => (dispatch) => {
       if (response.status == 201) {
         const loggedInUser = localStorage.getItem("user");
         const currentUser = JSON.parse(loggedInUser);
+        let obj = {};
         if (currentUser) {
           currentUser.cart.forEach((item) => {
             if (item.itemAdded === product.itemAdded) {
               item.count = response.cartUpdated.count;
+              obj.productName = item.productName;
+              obj.price = item.price;
+              obj.image = item.image;
+              obj.count = response.cartUpdated.count;
             }
             localStorage.setItem("user", JSON.stringify(currentUser));
           });
@@ -248,7 +262,7 @@ export const increment = (product) => (dispatch) => {
           type: "Increment",
           payload: {
             itemAdded: product.itemAdded,
-            count: response.cartUpdated.count,
+            obj,
           },
         });
       }
@@ -263,12 +277,17 @@ export const decrement = (product) => (dispatch) => {
     .then((response) => response.json())
     .then((response) => {
       if (response.status == 201) {
+        let obj = {};
         const loggedInUser = localStorage.getItem("user");
         const currentUser = JSON.parse(loggedInUser);
         if (currentUser) {
           currentUser.cart.forEach((item) => {
             if (item.itemAdded === product.itemAdded) {
               item.count = response.cartUpdated.count;
+              obj.productName = item.productName;
+              obj.price = item.price;
+              obj.image = item.image;
+              obj.count = response.cartUpdated.count;
             }
             localStorage.setItem("user", JSON.stringify(currentUser));
           });
@@ -278,7 +297,7 @@ export const decrement = (product) => (dispatch) => {
           type: "Increment",
           payload: {
             itemAdded: product.itemAdded,
-            count: response.cartUpdated.count,
+            obj,
           },
         });
       }
@@ -325,13 +344,18 @@ export const deleteItem = (product) => (dispatch) => {
 
             localStorage.setItem("user", JSON.stringify(currentUser));
           });
+
           currentUser.cart.forEach((item) => {
             if (!map.has(item.itemAdded)) {
-              map.set(item.itemAdded, item.count);
+              let obj = {};
+              obj.productName = item.productName;
+              obj.price = item.price;
+              obj.image = item.image;
+              obj.count = item.count;
+              map.set(item.itemAdded, obj);
             }
           });
         }
-        console.log(map);
         dispatch({
           type: "DeleteItem",
           payload: map,

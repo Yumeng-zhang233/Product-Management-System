@@ -1,16 +1,32 @@
-import React, { Component } from "react";
-import { Row, Col } from "react-bootstrap";
-// import "./SubTotal.css";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-export default class SubTotal extends Component {
-  render() {
-    return (
-      <Row>
-        <Col xs={6}>Subtotal</Col>
-        <Col xs={6}>
-          <strong>$100</strong>
-        </Col>
-      </Row>
-    );
-  }
+import { Row, Col } from "react-bootstrap";
+
+function SubTotal() {
+  const dispatch = useDispatch();
+  const userCart = useSelector((state) => state.user);
+  const charge = useSelector((state) => state.charge);
+
+  useEffect(() => {
+    let total = 0;
+    userCart.forEach((item) => {
+      let fee = item.price * item.count;
+      total += fee;
+    });
+    dispatch({
+      type: "SubTotal",
+      payload: total,
+    });
+    localStorage.setItem("purchase amount", JSON.stringify(total));
+  }, [userCart]);
+  return (
+    <Row>
+      <Col xs={6}>Subtotal</Col>
+      <Col xs={6}>
+        <strong>${charge.toFixed(2)}</strong>
+      </Col>
+    </Row>
+  );
 }
+export default SubTotal;

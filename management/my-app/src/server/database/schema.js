@@ -13,6 +13,9 @@ const userSchema = new mongoose.Schema(
     },
     cart: [
       {
+        productName: String,
+        price: Number,
+        image: String,
         itemAdded: String,
         count: Number,
       },

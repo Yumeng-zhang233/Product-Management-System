@@ -23,7 +23,6 @@ function Signin() {
 
   const handleChange = (e) => {
     e.preventDefault();
-    console.log(email, password);
     setPassword("");
     setEmail("");
   };
