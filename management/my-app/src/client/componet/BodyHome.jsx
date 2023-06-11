@@ -58,7 +58,7 @@ function BodyHome() {
     return (
       <>
         <BodyModal title={header}>
-          <PaginatedItems itemsPerPage={6} />
+          <PaginatedItems itemsPerPage={9} />
         </BodyModal>
       </>
     );

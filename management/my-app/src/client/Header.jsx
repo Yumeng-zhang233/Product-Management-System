@@ -7,9 +7,15 @@ import { logout } from "./actions/index";
 import { useDispatch } from "react-redux";
 import { UserInfoContext } from "./UserInfoContext";
 import Button from "react-bootstrap/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import Badge from "react-bootstrap/Badge";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
 
 const { Search } = Input;
 
@@ -31,46 +37,62 @@ function Header() {
     console.log("searched");
   }
   return (
-    <div className="header">
-      <label className="header_label">Management</label>
-      <Search
-        placeholder="input search text"
-        onSearch={onSearch}
-        className="search_input"
-        style={{
-          width: 300,
-          marginTop: 12,
-          marginLeft: 230,
-        }}
-      />
-      <Button
-        variant="primary"
-        onClick={() => {
-          setIsShowSignin(!isShowSignin);
-          if (isLoggedin.login == true) {
-            dispatch(logout());
-            setUser({});
-            setEmail("");
-            setPassword("");
-            let map = new Map();
-            dispatch({
-              type: "UserCart",
-              payload: map,
-            });
-            localStorage.clear();
-          }
-        }}
-        className="signin_icon"
-      >
-        {isLoggedin.login ? "SignOut" : "SignIn"}
-      </Button>{" "}
-      <AiOutlineShoppingCart
-        className="cart_icon"
-        onClick={() => {
-          setCartOpen(true);
-        }}
-      />{" "}
-    </div>
+    <Navbar bg="dark" variant="dark" expand="lg">
+      <Container fluid>
+        <Navbar.Brand href="#">Management</Navbar.Brand>
+        <Navbar.Toggle aria-controls="navbarScroll" />
+        <Navbar.Collapse id="navbarScroll">
+          <Nav
+            className="me-auto my-2 my-lg-0"
+            style={{ maxHeight: "100px" }}
+            navbarScroll
+          >
+            <Search
+              placeholder="input search text"
+              onSearch={onSearch}
+              className="search_input"
+              style={{
+                marginTop: 2,
+                width: 300,
+              }}
+            />
+          </Nav>
+          <Nav>
+            <ButtonGroup>
+              <Button
+                variant="outline-light"
+                onClick={() => {
+                  setIsShowSignin(!isShowSignin);
+                  if (isLoggedin.login == true) {
+                    dispatch(logout());
+                    setUser({});
+                    setEmail("");
+                    setPassword("");
+                    let map = new Map();
+                    dispatch({
+                      type: "UserCart",
+                      payload: map,
+                    });
+                    localStorage.clear();
+                  }
+                }}
+                // className="signin_icon"
+              >
+                {isLoggedin.login ? "SignOut" : "SignIn"}
+              </Button>{" "}
+              <Button variant="outline-light">
+                <AiOutlineShoppingCart
+                  // className="cart_icon
+                  onClick={() => {
+                    setCartOpen(true);
+                  }}
+                />{" "}
+              </Button>
+            </ButtonGroup>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 }
 

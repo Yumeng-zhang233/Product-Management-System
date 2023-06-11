@@ -8,21 +8,21 @@ function SigninContent() {
   const dispatch = useDispatch();
 
   const { signin, signup, update } = React.useContext(SigninContext);
-  const { userEmail, userPassword, userInfo } =
-    React.useContext(UserInfoContext);
+  const { userEmail, userPassword } = React.useContext(UserInfoContext);
   const { email, setEmail } = userEmail;
   const { password, setPassword } = userPassword;
-  const { user, setUser } = userInfo;
   const { isShowSignup, setIsShowSignup } = signup;
   const { isupdatePassword, setUpdatePassword } = update;
   const { isShowSignin, setIsShowSignin } = signin;
 
-  const isLoggedin = useSelector((state) => state.login);
-
   const handleChange = (e) => {
     e.preventDefault();
-
-    dispatch(login({ email, password }));
+    const res = localStorage.getItem("unkonowUser");
+    let guest = [];
+    if (res) {
+      guest = JSON.parse(res);
+    }
+    dispatch(login({ email, password, guest }));
     setIsShowSignin(false);
   };
 

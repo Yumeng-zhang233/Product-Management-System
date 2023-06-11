@@ -163,7 +163,7 @@ app.get("/logout", async (_, res) => {
 
 app.post("/addUser", async (req, res) => {
   if (req.body && req.body.email && req.body.password) {
-    const { email, password } = req.body;
+    const { email, password, guest } = req.body;
     let existUser = await User.exists({ email });
     if (existUser) {
       res.status(406).json({
@@ -172,11 +172,21 @@ app.post("/addUser", async (req, res) => {
       });
       return;
     }
-    const newUser = new User({
-      email,
-      password,
-      id: uuidv4(),
-    });
+    let newUser = {};
+    if (guest.length != 0) {
+      newUser = new User({
+        email,
+        password,
+        cart: guest,
+        id: uuidv4(),
+      });
+    } else {
+      newUser = new User({
+        email,
+        password,
+        id: uuidv4(),
+      });
+    }
     const retValue = await newUser.save();
     if (newUser == retValue) {
       res.status(201).json({
@@ -200,10 +210,31 @@ app.post("/addUser", async (req, res) => {
 
 app.post("/login", async (req, res) => {
   if (req.body && req.body.email && req.body.password) {
-    const { email, password } = req.body;
+    const { email, password, guest } = req.body;
     const queryResult = await User.findOne({ email });
     if (queryResult) {
       if (queryResult.password == password) {
+        if (guest && guest.length != 0) {
+          guest.forEach((item) => {
+            queryResult.cart.forEach((e) => {
+              if (e.itemAdded === item.itemAdded) {
+                e.count = item.count;
+                item.count = 0;
+              }
+            });
+            if (item.count != 0) {
+              let obj = {
+                productName: item.productName,
+                price: item.price,
+                image: item.image,
+                count: item.count,
+                itemAdded: item.itemAdded,
+              };
+              queryResult.cart.push(obj);
+            }
+          });
+          await queryResult.save();
+        }
         res.status(200).json({
           message: "user logged in",
           status: 200,

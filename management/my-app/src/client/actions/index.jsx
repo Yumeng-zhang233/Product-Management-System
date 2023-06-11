@@ -91,9 +91,9 @@ export const editProductInfo = (product) => async (dispatch) => {
 };
 
 export const addUser =
-  ({ email, password }) =>
+  ({ email, password, guest }) =>
   (dispatch) => {
-    fetch("/addUser", ajaxConfigHelper({ email, password }))
+    fetch("/addUser", ajaxConfigHelper({ email, password, guest }))
       .then((response) => response.json())
       .then(({ newUser: { email, password, cart, id } }) => {
         localStorage.setItem(
@@ -117,10 +117,24 @@ export const addUser =
           },
         });
         let map = new Map();
+        if (cart.length != 0) {
+          cart.forEach((e) => {
+            if (!map.has(e.itemAdded)) {
+              let obj = {
+                productName: e.productName,
+                price: e.price,
+                image: e.image,
+                count: e.count,
+              };
+              map.set(e.itemAdded, obj);
+            }
+          });
+        }
         dispatch({
           type: "UserCart",
           payload: map,
         });
+        localStorage.removeItem("unkonowUser");
       })
       .catch((e) => {
         console.error(e);
@@ -128,9 +142,9 @@ export const addUser =
   };
 
 export const login =
-  ({ email, password }) =>
+  ({ email, password, guest }) =>
   (dispatch) => {
-    fetch("/login", ajaxConfigHelper({ email, password }))
+    fetch("/login", ajaxConfigHelper({ email, password, guest }))
       .then((response) => response.json())
       .then(({ currentUser: { email, password, cart, id } }) => {
         //update local storage;
@@ -171,6 +185,7 @@ export const login =
           type: "UserCart",
           payload: map,
         });
+        localStorage.removeItem("unkonowUser");
       })
       .catch((e) => {
         console.error(e);

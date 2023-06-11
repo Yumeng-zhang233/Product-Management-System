@@ -50,34 +50,35 @@ function PaginatedItems({ itemsPerPage }) {
 
   return (
     <>
-      <ButtonGroup className="button_group">
-        <DropdownButton
-          as={ButtonGroup}
-          title="Sort products"
-          id="bg-nested-dropdown"
-          variant="secondary"
-        >
-          <Dropdown.Item
-            eventKey="1"
-            onClick={() => {
-              setSortedProduct(products.sort(ascendingPrice));
-            }}
+      <div className="sort_add">
+        <ButtonGroup className="button_group">
+          <DropdownButton
+            as={ButtonGroup}
+            title="Sort products"
+            id="bg-nested-dropdown"
+            variant="secondary"
           >
-            Price: low to high
-          </Dropdown.Item>
-        </DropdownButton>
-        {email == "admin@gmail.com" && password == "123456" && (
-          <Button
-            variant="light"
-            onClick={() => {
-              setIsCreatedProduct(true);
-            }}
-          >
-            Add Product
-          </Button>
-        )}
-      </ButtonGroup>
-
+            <Dropdown.Item
+              eventKey="1"
+              onClick={() => {
+                setSortedProduct(products.sort(ascendingPrice));
+              }}
+            >
+              Price: low to high
+            </Dropdown.Item>
+          </DropdownButton>
+          {email == "admin@gmail.com" && password == "123456" && (
+            <Button
+              variant="light"
+              onClick={() => {
+                setIsCreatedProduct(true);
+              }}
+            >
+              Add Product
+            </Button>
+          )}
+        </ButtonGroup>
+      </div>
       <ProductList currentItems={currentItems} />
       <div className="page">
         <ReactPaginate
@@ -100,6 +101,10 @@ function PaginatedItems({ itemsPerPage }) {
           activeClassName="active"
           renderOnZeroPageCount={null}
         />
+      </div>
+      <div className="copytight">
+        <p>copyright</p>
+        <p>Yumeng Zhang</p>
       </div>
     </>
   );

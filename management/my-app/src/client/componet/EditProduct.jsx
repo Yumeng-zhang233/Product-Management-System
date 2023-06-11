@@ -7,6 +7,12 @@ import { addProduct, editProductInfo } from "../actions/index";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CloseButton from "react-bootstrap/CloseButton";
 
+import Form from "react-bootstrap/Form";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import TextArea from "antd/es/input/TextArea";
+
 function EditProduct() {
   const dispatch = useDispatch();
   const originalInfo = useSelector((state) => state.detail);
@@ -46,68 +52,117 @@ function EditProduct() {
           }}
         />
 
-        <form onSubmit={handleChange}>
+        <Form onSubmit={handleChange}>
           <label className="product_label">Product Name</label>
           <br></br>
-          <textarea
+          <Form.Control
             className="product_name"
             rows="1"
             cols="58"
             placeholder={originalInfo.productName}
             onChange={(e) => setproductName(e.target.value)}
-          ></textarea>
+          ></Form.Control>
           <br></br>
           <label className="product_label">Product Description</label>
           <br></br>
-          <textarea
+          <TextArea
             className="product_name"
             rows="4"
             cols="58"
             placeholder={originalInfo.description}
             onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
+          ></TextArea>
           <br></br>
-          <span className="product_label">Category</span>
-          <span className="product_price">Price</span>
+          <Row className="mb-3">
+            <Form.Group as={Col} controlId="formGridState">
+              <Form.Label className="form_label">Category</Form.Label>
+              <Form.Select
+                defaultValue={originalInfo.category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option>Category1</option>
+                <option>Category2</option>
+                <option>Category3</option>
+              </Form.Select>
+              {/* <DropdownButton
+                className="dropdown_category"
+                title="Select one category option ......"
+                variant="secondary"
+                onChange={(e) => setCategory(e.target.value)}
+              > */}
+              {/* <Dropdown.Item className="category" href="Category1">
+                Category1
+              </Dropdown.Item>
+              <Dropdown.Item className="category" href="Category2">
+                Category2
+              </Dropdown.Item>
+              <Dropdown.Item className="category" href="Category3">
+                Category3
+              </Dropdown.Item> */}
+              {/* </DropdownButton>{" "} */}
+            </Form.Group>
+
+            <Form.Group as={Col} controlId="formGridPassword">
+              <Form.Label className="form_label">Price</Form.Label>
+              <Form.Control
+                type="number"
+                className="quantity"
+                placeholder={originalInfo.price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+            </Form.Group>
+            {/* <input
+                  type="number"
+                  className="quantity"
+                  placeholder={originalInfo.price}
+                  onChange={(e) => setPrice(e.target.value)}
+                /> */}
+          </Row>
           <br></br>
-          <select
-            className="category"
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="Category1">Category1</option>
-            <option value="Category2">Category2</option>
-            <option value="Category3">Category3</option>
-          </select>
-          <input
-            type="number"
-            className="quantity"
-            placeholder={originalInfo.price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-          <br></br>
-          <span className="product_quantity_label">In Stock Quantity</span>
+          <Row className="mb-3">
+            <Form.Group className="mb-3" controlId="formGridAddress1">
+              <Form.Label className="form_label">Stock Quantity</Form.Label>
+              <Form.Control
+                type="number"
+                // className="product_quantity"
+                placeholder={originalInfo.quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+              />
+            </Form.Group>
+
+            {/* <span className="product_quantity_label">In Stock Quantity</span>
           <span className="image_link">Add image link</span>
-          <br></br>
-          <input
+          <br></br> */}
+            {/* <input
             type="number"
             className="product_quantity"
             placeholder={originalInfo.quantity}
             onChange={(e) => setQuantity(e.target.value)}
-          />
-          <input
-            type="url"
-            className="url"
-            placeholder={originalInfo.image}
-            pattern="https://.*"
-            size="30"
-            onChange={(e) => setImage(e.target.value)}
-          />
+          /> */}
+            <Form.Group className="mb-3" controlId="formGridAddress2">
+              <Form.Label className="form_label">Image url</Form.Label>
+              <Form.Control
+                type="url"
+                // className="url"
+                placeholder={originalInfo.image}
+                pattern="https://.*"
+                onChange={(e) => setImage(e.target.value)}
+              />
+            </Form.Group>
+          </Row>
+          {/* <input
+              type="url"
+              className="url"
+              placeholder={originalInfo.image}
+              pattern="https://.*"
+              size="30"
+              onChange={(e) => setImage(e.target.value)}
+            /> */}
           <div class="item">
             <img src={image} />
           </div>
-
           <input type="submit" value="Edit" className="login-btn" />
-        </form>
+        </Form>
       </div>{" "}
     </div>
   );

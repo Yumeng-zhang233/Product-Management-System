@@ -4,14 +4,18 @@
   display: flex;
   flex-direction: column;
 }
+
 /* Header/logo Title */
 .header {
   height: 60px;
   background-color: #000;
 }
-
+.count_group {
+  margin-left: -10px;
+  margin-right: -10px;
+}
 .cart_icon {
-  position: absolute;
+  /* position: absolute;
   width: 83px;
   text-decoration: none;
   display: flex;
@@ -22,7 +26,7 @@
   left: 88%;
   top: 14px;
   border-radius: 24px;
-  cursor: pointer;
+  cursor: pointer; */
 
   color: aliceblue;
   width: 50px;
@@ -31,32 +35,51 @@
 .product_cart_quantity {
   color: #000;
   margin-top: 12px;
-  width: 17px;
+  width: 15px;
   font-size: smaller;
 }
-.card {
-  margin: 0.5%;
-  flex: 0 0 15%;
+.top {
+  display: flex;
+  flex-direction: row;
 }
+.cards {
+  margin: 2%;
+  width: 13rem;
+}
+.cart_card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card_detail {
+  margin: 2%;
+  width: 90%;
+  background-color: antiquewhite;
+}
+
 .product_button {
   margin-left: 5%;
   width: 40%;
+  height: 40px;
 }
 .product_list {
   width: 100%;
   display: flex;
   flex-flow: row wrap;
-  align-content: flex-start;
-  margin: 2%;
+  align-content: center;
+  margin: 3%;
+}
+.option {
+  background-color: red;
 }
 a {
   color: white;
   margin-left: 5px;
 }
 
-.body {
+/* .body {
   height: calc(100% - 120px);
-}
+} */
 
 .signin_icon:hover {
   color: white;
@@ -104,11 +127,10 @@ a {
   border-radius: 20px;
   box-shadow: 10px 10px 10px 1px rgba(0, 0, 0, 0.2);
 }
-.category {
-  min-width: 43%;
-  height: 30px;
-  margin-bottom: 5px;
-}
+
+/* .dropdown_category {
+  margin-left: -60px;
+} */
 .product_price {
   margin-left: 43%;
 }
@@ -116,9 +138,7 @@ a {
   width: 100%;
 }
 .quantity {
-  margin-left: 12%;
-  min-width: 43%;
-  height: 24px;
+  width: 150px;
 }
 .product_box {
   background: rgb(255, 255, 255);
@@ -133,17 +153,24 @@ a {
 .product_quantity_label {
   color: black;
   padding-top: 12px;
+  margin-left: 39px;
+}
+.category_label {
+  margin-left: 10%;
 }
 .product_quantity {
-  min-width: 42%;
+  width: 200px;
   height: 24px;
   margin-bottom: 5px;
+  margin-left: 5%;
 }
 .image_link {
-  margin-left: 32%;
+  margin-left: 35%;
 }
 .url {
-  margin-left: 10%;
+  margin-left: 18%;
+  width: 200px;
+
   height: 24px;
 }
 img {
@@ -169,6 +196,9 @@ img {
 }
 form {
   padding-bottom: 15%;
+}
+.form_label {
+  color: #000;
 }
 .login-box {
   border: 1px solid lightgrey;
@@ -275,7 +305,8 @@ label {
   font-size: larger;
 }
 .product_detail_image {
-  width: 250px;
+  width: auto;
+  height: 200px;
 }
 .product_detail_text {
   margin-left: 5%;
@@ -292,20 +323,26 @@ label {
   margin-right: 25%;
 }
 .card_image {
-  width: 200px;
-  height: 300px;
+  width: 60px;
+  height: 200px;
 }
 .button_group {
-  margin-left: 80%;
+  float: right;
+  margin-right: 20px;
 }
 .page {
-  margin-left: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .purchase-card {
   margin-top: 10px;
   width: 430px;
   padding: 1em;
+}
+.whole_cards {
+  margin-left: 3px;
 }
 
 .cart_image {
@@ -315,6 +352,9 @@ label {
 .cart_button {
   width: 100%;
 }
+.copytight {
+  color: #fffbee;
+}
 
 @import "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css";
 
@@ -322,27 +362,54 @@ label {
   body {
     background-color: lightblue;
   }
-  .signin_icon {
-    position: absolute;
-    width: 7%;
-    display: flex;
-    align-items: center;
-    font-weight: bolder;
-    color: black;
-    left: 65%;
-    top: 10px;
-    cursor: pointer;
-  }
-  .search_input {
-    position: absolute;
-    left: -47.5%;
-    padding-top: 50px;
-  }
+
   .header {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: black;
+    padding-top: 5px;
+    padding-bottom: 5px;
     height: 110px;
-    background: black;
   }
   .modal {
     padding-right: 25px;
+  }
+}
+@media only screen and (max-width: 665px) {
+  .edit_product_container {
+    margin-left: 8%;
+    margin-right: 6%;
+  }
+
+  .item {
+    float: left;
+    margin: 3px;
+    padding: 3px;
+    border: 1px dashed #000;
+    width: 200px;
+    height: 150px;
+  }
+}
+@media only screen and (max-width: 414px) {
+  .cards {
+    width: 20rem;
+    margin-left: 23px;
+  }
+  body {
+    width: 103%;
+  }
+
+  .sort_add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media only screen and (max-width: 525px) {
+  .purchase-card {
+    width: 100%;
   }
 }

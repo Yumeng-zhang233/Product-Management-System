@@ -1,15 +1,12 @@
 import "./App.css";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState } from "react";
 import { UserInfoContext } from "./UserInfoContext";
 import Badge from "react-bootstrap/Badge";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { SigninContext } from "./SigninContext";
 import Signin from "./componet/Signin";
 import { useSelector } from "react-redux";
-import Home from "./componet/Home";
-import ProductList from "./componet/ProductList";
 import { useDispatch } from "react-redux";
-import { initProducts } from "./actions";
 import BodyHome from "./componet/BodyHome";
 import ShoppingCart from "./componet/ShoppingCart";
 import CartModal from "./componet/BodyContent";

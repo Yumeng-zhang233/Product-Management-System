@@ -18,6 +18,7 @@ const ProductList = ({ currentItems }) => {
           currentItems.map((item) => {
             return (
               <Product
+                className="card_frame"
                 key={item.id}
                 productName={item.productName}
                 description={item.description}

@@ -21,7 +21,12 @@ function SignupContent() {
 
   const handleChange = (e) => {
     e.preventDefault();
-    dispatch(addUser({ email, password }));
+    const res = localStorage.getItem("unkonowUser");
+    let guest = [];
+    if (res) {
+      guest = JSON.parse(res);
+    }
+    dispatch(addUser({ email, password, guest }));
     setIsShowSignin(false);
   };
 

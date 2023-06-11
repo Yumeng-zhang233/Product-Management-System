@@ -7,6 +7,8 @@ import { initProducts } from "./actions";
 import { SigninContext } from "./SigninContext.js";
 import { UserInfoContext } from "./UserInfoContext";
 import { store } from "./store/index";
+import ErrorBoundary from "./ErrorBoundary";
+import ButtonComponent from "../ButtonComponent";
 
 import React, { useState, useEffect } from "react";
 
@@ -27,6 +29,7 @@ function App() {
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem("user");
+    const guestUser = localStorage.getItem("unkonowUser");
 
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
@@ -47,6 +50,26 @@ function App() {
       let map = new Map();
 
       foundUser.cart.forEach((item) => {
+        if (!map.has(item.itemAdded)) {
+          let obj = {
+            productName: item.productName,
+            price: item.price,
+            image: item.image,
+            count: item.count,
+          };
+          map.set(item.itemAdded, obj);
+        }
+      });
+      dispatch({
+        type: "UserCart",
+        payload: map,
+      });
+    }
+    if (guestUser) {
+      const guest = JSON.parse(guestUser);
+      let map = new Map();
+
+      guest.forEach((item) => {
         if (!map.has(item.itemAdded)) {
           let obj = {
             productName: item.productName,
@@ -88,7 +111,10 @@ function App() {
             userInfo: { user, setUser },
           }}
         >
-          <Header />
+          <ErrorBoundary>
+            {/* <ButtonComponent /> */}
+            <Header />
+          </ErrorBoundary>
           <Body />
           <Footer />
         </UserInfoContext.Provider>

@@ -44,7 +44,7 @@ const ItemDetails = ({ count, id }) => {
   }, []);
 
   return (
-    <div>
+    <div className="cart_card">
       <div class="card mb-3">
         <div class="row g-0">
           <div class="col-md-4">
@@ -67,7 +67,33 @@ const ItemDetails = ({ count, id }) => {
                     <Badge
                       bg="secondary"
                       onClick={() => {
-                        dispatch(increment({ user: email, itemAdded: id }));
+                        const loggedInUser = localStorage.getItem("user");
+                        if (loggedInUser) {
+                          dispatch(increment({ user: email, itemAdded: id }));
+                        } else {
+                          const res = localStorage.getItem("unkonowUser");
+                          if (res) {
+                            const guest = JSON.parse(res);
+                            let obj = {};
+                            guest.forEach((e) => {
+                              if (e.itemAdded === id) {
+                                e.count++;
+                                obj.productName = e.productName;
+                                obj.price = e.price;
+                                obj.image = e.image;
+                                obj.count = e.count;
+                              }
+                            });
+                            localStorage.setItem(
+                              "unkonowUser",
+                              JSON.stringify(guest)
+                            );
+                            dispatch({
+                              type: "Decrement",
+                              payload: { itemAdded: id, obj },
+                            });
+                          }
+                        }
                       }}
                     >
                       +
@@ -78,7 +104,37 @@ const ItemDetails = ({ count, id }) => {
                     <Badge
                       bg="secondary"
                       onClick={() => {
-                        dispatch(decrement({ user: email, itemAdded: id }));
+                        const loggedInUser = localStorage.getItem("user");
+                        if (loggedInUser) {
+                          dispatch(decrement({ user: email, itemAdded: id }));
+                        } else {
+                          const res = localStorage.getItem("unkonowUser");
+                          if (res) {
+                            const guest = JSON.parse(res);
+                            let obj = {};
+                            guest.forEach((e) => {
+                              if (e.itemAdded === id) {
+                                if (e.count > 1) {
+                                  e.count--;
+                                  obj.productName = e.productName;
+                                  obj.price = e.price;
+                                  obj.image = e.image;
+                                  obj.count = e.count;
+                                }
+                              }
+                            });
+                            if (Object.keys(obj).length != 0) {
+                              localStorage.setItem(
+                                "unkonowUser",
+                                JSON.stringify(guest)
+                              );
+                              dispatch({
+                                type: "Decrement",
+                                payload: { itemAdded: id, obj },
+                              });
+                            }
+                          }
+                        }
                       }}
                     >
                       -
@@ -90,7 +146,41 @@ const ItemDetails = ({ count, id }) => {
                     variant="outline-secondary"
                     size="sm"
                     onClick={() => {
-                      dispatch(deleteItem({ user: email, id: id }));
+                      const loggedInUser = localStorage.getItem("user");
+                      if (loggedInUser) {
+                        dispatch(deleteItem({ user: email, id: id }));
+                      } else {
+                        const res = localStorage.getItem("unkonowUser");
+                        if (res) {
+                          const guest = JSON.parse(res);
+                          guest.forEach((item) => {
+                            if (item.itemAdded === id) {
+                              let index = guest.indexOf(item);
+                              guest.splice(index, 1);
+                            }
+
+                            localStorage.setItem(
+                              "unkonowUser",
+                              JSON.stringify(guest)
+                            );
+                          });
+                          let map = new Map();
+                          guest.forEach((item) => {
+                            if (!map.has(item.itemAdded)) {
+                              let obj = {};
+                              obj.productName = item.productName;
+                              obj.price = item.price;
+                              obj.image = item.image;
+                              obj.count = item.count;
+                              map.set(item.itemAdded, obj);
+                            }
+                          });
+                          dispatch({
+                            type: "DeleteItem",
+                            payload: map,
+                          });
+                        }
+                      }
                     }}
                   >
                     Remove

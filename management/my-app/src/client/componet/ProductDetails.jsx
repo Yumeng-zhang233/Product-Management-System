@@ -40,18 +40,42 @@ function ProductDetails() {
           <h2>
             {product.productName} <Badge bg="secondary">${product.price}</Badge>
           </h2>
-          <p class="card-text">{product.description}</p>
+          <p class="card_detail-text">{product.description}</p>
           {userCart &&
           userCart.get(product.id) &&
           userCart.get(product.id).count > 0 ? (
-            <ButtonGroup>
+            <ButtonGroup className="count_group">
               {" "}
               <Badge
                 bg="secondary"
                 onClick={() => {
-                  dispatch(
-                    increment({ user: product.email, itemAdded: product.id })
-                  );
+                  const loggedInUser = localStorage.getItem("user");
+                  if (loggedInUser) {
+                    dispatch(increment({ user: email, itemAdded: product.id }));
+                  } else {
+                    const res = localStorage.getItem("unkonowUser");
+                    if (res) {
+                      const guest = JSON.parse(res);
+                      let obj = {};
+                      guest.forEach((e) => {
+                        if (e.itemAdded === product.id) {
+                          e.count++;
+                          obj.productName = e.productName;
+                          obj.price = e.price;
+                          obj.image = e.image;
+                          obj.count = e.count;
+                        }
+                      });
+                      localStorage.setItem(
+                        "unkonowUser",
+                        JSON.stringify(guest)
+                      );
+                      dispatch({
+                        type: "Increment",
+                        payload: { itemAdded: product.id, obj },
+                      });
+                    }
+                  }
                 }}
               >
                 +
@@ -62,9 +86,37 @@ function ProductDetails() {
               <Badge
                 bg="secondary"
                 onClick={() => {
-                  dispatch(
-                    decrement({ user: product.email, itemAdded: product.id })
-                  );
+                  const loggedInUser = localStorage.getItem("user");
+                  if (loggedInUser) {
+                    dispatch(decrement({ user: email, itemAdded: product.id }));
+                  } else {
+                    const res = localStorage.getItem("unkonowUser");
+                    if (res) {
+                      const guest = JSON.parse(res);
+                      let obj = {};
+                      guest.forEach((e) => {
+                        if (e.itemAdded === product.id) {
+                          if (e.count > 1) {
+                            e.count--;
+                            obj.productName = e.productName;
+                            obj.price = e.price;
+                            obj.image = e.image;
+                            obj.count = e.count;
+                          }
+                        }
+                      });
+                      if (Object.keys(obj).length != 0) {
+                        localStorage.setItem(
+                          "unkonowUser",
+                          JSON.stringify(guest)
+                        );
+                        dispatch({
+                          type: "Increment",
+                          payload: { itemAdded: product.id, obj },
+                        });
+                      }
+                    }
+                  }
                 }}
               >
                 -
@@ -91,7 +143,36 @@ function ProductDetails() {
                     payload: 1,
                   });
                 } else {
-                  console.log("click");
+                  const res = localStorage.getItem("unkonowUser");
+                  let itemList = [];
+                  if (res) {
+                    itemList = JSON.parse(res);
+                  }
+                  const item = {
+                    productName: product.productName,
+                    price: product.price,
+                    image: product.image,
+                    itemAdded: product.id,
+                    count: 1,
+                  };
+                  itemList.push(item);
+                  localStorage.setItem("unkonowUser", JSON.stringify(itemList));
+                  let map = new Map();
+                  itemList.forEach((e) => {
+                    if (!map.has(e.itemAdded)) {
+                      let obj = {
+                        productName: e.productName,
+                        price: e.price,
+                        image: e.image,
+                        count: e.count,
+                      };
+                      map.set(e.itemAdded, obj);
+                    }
+                  });
+                  dispatch({
+                    type: "UserCart",
+                    payload: map,
+                  });
                 }
               }}
             >
