@@ -1,8 +1,7 @@
 import React from "react";
+import "./App.css";
+import Button from "react-bootstrap/Button";
 
-const ErrorComponent = () => {
-  return <h1>Something went wrong</h1>;
-};
 class ErrorBoundary extends React.Component {
   state = {
     hasError: false,
@@ -11,10 +10,14 @@ class ErrorBoundary extends React.Component {
   };
 
   static getDerivedStateFromError = (error) => {
+    console.log("ccc");
     return { hasError: true };
   };
 
   componentDidCatch = (error, info) => {
+    console.log("bbb");
+    // this.setState({ hasError: true });
+
     this.setState({ error, info });
   };
 
@@ -23,7 +26,33 @@ class ErrorBoundary extends React.Component {
     console.log(error, info);
     const { children } = this.props;
 
-    return hasError ? <ErrorComponent /> : children;
+    return hasError ? (
+      <div>
+        <div className="error_icon">
+          {" "}
+          <img
+            src="https://static.thenounproject.com/png/1073692-200.png"
+            alt=""
+          />
+        </div>
+        <div className="error_boundary">
+          {" "}
+          <h1>Oops, something went wrong</h1>
+        </div>
+        <div className="error_boundary">
+          {" "}
+          <Button
+            onClick={() => {
+              this.setState({ hasError: false });
+            }}
+          >
+            Go home
+          </Button>
+        </div>
+      </div>
+    ) : (
+      children
+    );
   }
 }
 

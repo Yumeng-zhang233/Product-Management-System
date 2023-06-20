@@ -10,17 +10,16 @@ import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import Badge from "react-bootstrap/Badge";
 import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import { useErrorBoundary } from "react-error-boundary";
 
 const { Search } = Input;
 
 function Header() {
   const dispatch = useDispatch();
+  const { showBoundary } = useErrorBoundary();
 
   const { signin, signup, openCart } = React.useContext(SigninContext);
   let isLoggedin = useSelector((state) => state.login);
@@ -34,7 +33,8 @@ function Header() {
   const { user, setUser } = userInfo;
 
   function onSearch() {
-    console.log("searched");
+    console.log("serached");
+    showBoundary();
   }
   return (
     <Navbar bg="dark" variant="dark" expand="lg">

@@ -1,3 +1,5 @@
+"use client";
+
 import "./App.css";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -7,10 +9,22 @@ import { initProducts } from "./actions";
 import { SigninContext } from "./SigninContext.js";
 import { UserInfoContext } from "./UserInfoContext";
 import { store } from "./store/index";
-import ErrorBoundary from "./ErrorBoundary";
-import ButtonComponent from "../ButtonComponent";
+// import ErrorBoundary from "./ErrorBoundary";
+import { ErrorBoundary } from "react-error-boundary";
+import Fallback from "./Fallback";
 
+import ButtonComponent from "./ButtonComponent";
 import React, { useState, useEffect } from "react";
+
+function ErrorFallback({ error, resetErrorBoundary }) {
+  return (
+    <div role="alert">
+      <p>Failed to load users:</p>
+      <pre>{error.message}</pre>
+      <button onClick={resetErrorBoundary}>Try again</button>
+    </div>
+  );
+}
 
 function App() {
   const dispatch = useDispatch();
@@ -22,6 +36,7 @@ function App() {
   const [isProductDetail, setIsProductDetail] = useState(false);
   const [isEditProduct, setIsEditProduct] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
+  const [explode, setExplode] = useState(false);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -102,6 +117,7 @@ function App() {
           productDetail: { isProductDetail, setIsProductDetail },
           editProduct: { isEditProduct, setIsEditProduct },
           openCart: { cartOpen, setCartOpen },
+          errorExplode: { explode, setExplode },
         }}
       >
         <UserInfoContext.Provider
@@ -111,11 +127,12 @@ function App() {
             userInfo: { user, setUser },
           }}
         >
-          <ErrorBoundary>
-            {/* <ButtonComponent /> */}
+          <ErrorBoundary FallbackComponent={Fallback}>
             <Header />
+            {explode ? <ButtonComponent /> : null}
+            <Body />
           </ErrorBoundary>
-          <Body />
+
           <Footer />
         </UserInfoContext.Provider>
       </SigninContext.Provider>

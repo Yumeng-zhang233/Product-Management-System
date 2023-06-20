@@ -7,6 +7,8 @@ import PopWindow from "../PopWindow";
 import SigninContent from "./SigninContent";
 import SignupContent from "./SignupContent";
 import UpdatePassword from "./UpdatePassword";
+import ErrorBoundary from "antd/es/alert/ErrorBoundary";
+import Fallback from "../Fallback";
 
 function Signin() {
   const { signin, signup, update } = React.useContext(SigninContext);

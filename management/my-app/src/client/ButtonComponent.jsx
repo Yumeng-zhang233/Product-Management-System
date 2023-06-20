@@ -1,6 +1,6 @@
 const ButtonComponent = () => {
   throw Error("error!");
-  return <></>;
+  return <> </>;
 };
 
 export default ButtonComponent;
